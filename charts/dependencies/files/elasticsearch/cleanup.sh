@@ -12,7 +12,7 @@
 # Reference to container within the same k8s pod
 ELASTIC_HOST=${ELASTIC_HOST:-"elasticsearch:9200"}
 
-approved_words=${ES_INDEX_PREFIXES:-"events_ ocrvs-"}
+approved_words=${ES_INDEX_PREFIXES:-"events_ ocrvs- reindexing_status"}
 
 # Hostname for elasticsearch container
 # - password protected
@@ -33,7 +33,7 @@ echo "--------------------------"
 for index in $indices; do
   for approved in $approved_words; do
       case "$index" in
-      "$approved"*) 
+      "$approved"*)
           echo "Delete index $index..."
           curl -sS -XDELETE "http://$(elasticsearch_host)/$index"
           echo ""
