@@ -68,7 +68,7 @@ spec:
               value: http://config.{{ .Release.Namespace }}.svc.cluster.local:2021
             - name: COUNTRY_CONFIG_URL
               value: {{ include "render-external-url" (dict "service_name" "countryconfig" "Values" .Values) }}
-              - name: MINIO_BUCKET
+            - name: MINIO_BUCKET
               value: ocrvs
             - name: MINIO_BASE_URL
               value: {{ include "render-external-url" (dict "service_name" "minio" "Values" .Values) }}
