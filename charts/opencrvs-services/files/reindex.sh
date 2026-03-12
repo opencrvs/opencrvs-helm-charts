@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,7 +8,6 @@
 #
 # Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
 
-#!/usr/bin/env bash
 set -euo pipefail
 
 EVENTS_URL="${EVENTS_URL:-http://localhost:5555/}"
@@ -30,7 +30,8 @@ fire_trigger() {
     -X POST \
     -H "Authorization: Bearer ${token}" \
     -H "Content-Type: application/json" \
-    "${EVENTS_URL%/}/events/reindex" &
+    -d '{"waitForCompletion": false}' \
+    "${EVENTS_URL%/}/events/reindex"
 }
 
 # Returns the most recent reindex status document whose timestamp >= $2,
@@ -38,12 +39,14 @@ fire_trigger() {
 # Both sides of the comparison are truncated to 19 chars (YYYY-MM-DDTHH:MM:SS)
 # to avoid the '.' < 'Z' string-sort trap with millisecond timestamps.
 fetch_latest_run_since() {
-  local token=$1 since=$2
+  local token=$1
+  local since
+  since=$(echo "$2" | cut -c1-19)
   curl -s \
     -H "Authorization: Bearer ${token}" \
     -H "Content-Type: application/json" \
     "${EVENTS_URL%/}/events/reindex" \
-  | jq -c --arg since "${since:0:19}" \
+  | jq -c --arg since "$since" \
     'map(select(.timestamp[0:19] >= $since)) | sort_by(.timestamp) | reverse | .[0] // empty'
 }
 
@@ -68,20 +71,20 @@ echo "Polling reindex status..."
 polls=0
 first_poll=true
 while true; do
-  if [[ "$first_poll" == true ]]; then
+  if [ "$first_poll" = true ]; then
     sleep 3
     first_poll=false
   else
     sleep "$POLL_INTERVAL"
   fi
-  polls=$((polls + 1))
+  polls=$(( polls + 1 ))
 
   RUN=$(fetch_latest_run_since "$TOKEN" "$TRIGGER_TIME")
 
-  if [[ -z "$RUN" ]]; then
+  if [ -z "$RUN" ]; then
     echo "  Waiting for reindex to start... (${polls})"
 
-    if (( polls > MAX_POLLS )); then
+    if [ "$polls" -gt "$MAX_POLLS" ]; then
       echo "ERROR: timed out waiting for reindex to start."
       exit 1
     fi
@@ -94,8 +97,9 @@ while true; do
   case "$STATUS" in
     running)
       echo "  Running... ${PROCESSED} events processed so far"
-      if (( polls > MAX_POLLS )); then
-        echo "ERROR: reindex timed out after $((polls * POLL_INTERVAL)) seconds."
+      if [ "$polls" -gt "$MAX_POLLS" ]; then
+        timeout_secs=$(( polls * POLL_INTERVAL ))
+        echo "ERROR: reindex timed out after ${timeout_secs} seconds."
         exit 1
       fi
       ;;
@@ -110,7 +114,7 @@ while true; do
       ;;
     *)
       echo "  Unknown status '${STATUS}' — continuing to poll..."
-      if (( polls > MAX_POLLS )); then
+      if [ "$polls" -gt "$MAX_POLLS" ]; then
         exit 1
       fi
       ;;
