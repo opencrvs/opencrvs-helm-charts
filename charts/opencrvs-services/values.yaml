@@ -172,6 +172,8 @@ postgres:
 # All OpenCRVS services will be available under domain:
 hostname: opencrvs.localhost
 
+# This section allows manually define credentials
+credentials: {}
 
 ingress:
   # Access OpenCRVS services at https://<hostname>/

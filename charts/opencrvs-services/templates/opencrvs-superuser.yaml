@@ -12,5 +12,5 @@ metadata:
     "helm.sh/hook-weight": "0"
 type: Opaque
 data:
-  SUPER_USER_PASSWORD: {{ randAlphaNum 32 | b64enc }}
+  SUPER_USER_PASSWORD: {{ default (randAlphaNum 32) .Values.credentials.super_user_password | b64enc }}
 {{- end }}
