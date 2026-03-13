@@ -45,7 +45,8 @@ def data_cleanup(
             countryconfig_image_name=countryconfig_image_name,
             countryconfig_image_tag=countryconfig_image_tag,
             opencrvs_tools_chart_path=opencrvs_tools_chart_path
-        )
+        ),
+        quiet=True
     )
 
     k8s_yaml(job_yaml)
@@ -72,7 +73,8 @@ def seed_data(
             opencrvs_configuration_file=opencrvs_configuration_file,
             core_images_tag=core_images_tag,
             opencrvs_tools_chart_path=opencrvs_tools_chart_path
-        )
+        ),
+        quiet=True
     )
 
     k8s_yaml(job_yaml)
