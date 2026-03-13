@@ -174,6 +174,13 @@ hostname: opencrvs.localhost
 
 # This section allows manually define credentials
 credentials: {}
+  # super_user_password: Define super user password from stdin
+
+# WARNING: Use only with Tilt
+# Define path to static files internal OpenCRVS certificates
+certs: {}
+  # cert_file: File with certificate
+  # key_file: File with key
 
 ingress:
   # Access OpenCRVS services at https://<hostname>/
