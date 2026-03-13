@@ -21,7 +21,14 @@
 ### Quick Start with Tilt
 
 > [!NOTE]
-> Apple Silicon and ARM64 device owners, please check existing ARM64 tags at [GitHub packages](https://github.com/orgs/opencrvs/packages?ecosystem=container) or build images yourself and update `Tiltfile` before running `tilt up`
+> Apple Silicon and ARM64 device owners, please check existing ARM64 tags at [GitHub packages](https://github.com/orgs/opencrvs/packages?ecosystem=container) or build images yourself and update `Tiltfile` before running `tilt up`.
+
+> [!NOTE]
+> First time environment startup time may differ depending on your hardware specification and internet connection speed:
+> - 20 minutes at 1000Mb/s
+> - 15 minutes at 300Mb/s
+>
+> Every next startup takes up to 5 minutes
 
 1. The fastest way to get OpenCRVS running locally:
     ```bash
