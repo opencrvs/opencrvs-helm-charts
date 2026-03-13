@@ -4,6 +4,7 @@
 {{- $secret_name := printf "%s-key-tls" .Release.Name }}
 {{- $secret := lookup "v1" "Secret" .Release.Namespace $secret_name }}
 {{- if not $secret }}
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -14,7 +15,12 @@ metadata:
     "helm.sh/hook-weight": "0"
 type: Opaque
 data:
+  {{- if .Values.certs.key_file }}
+  "private-key.pem": |
+    {{ .Files.Get .Values.certs.key_file | b64enc | indent 4 }}
+  {{- else }}
   "private-key.pem": {{ $cert.Key | b64enc | toYaml | indent 4}}
+  {{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -25,5 +31,10 @@ metadata:
     "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "0"
 data:
+  {{- if .Values.certs.key_file }}
+  "public-key.pem": |
+{{ .Files.Get .Values.certs.crt_file | indent 4 }}
+  {{- else }}
   "public-key.pem": {{ $cert.Cert | toYaml | indent 4}}
+  {{- end }}
 {{- end }}

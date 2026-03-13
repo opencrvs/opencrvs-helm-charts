@@ -163,6 +163,9 @@ spec:
           configMap:
             name: postgres-scripts
             defaultMode: 0755
+            items:
+              - key: postgres-backup-config.sh
+                path: postgres-backup-config.sh
         - name: postgres-run
           emptyDir: {}
         - name: data

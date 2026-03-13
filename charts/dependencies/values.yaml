@@ -42,6 +42,9 @@ mongodb:
   use_default_credentials: true
   # MongoDB databases and users to create, if `use_default_credentials` is set to `false`.
   admin_user_secret_name: mongodb-admin-user
+  # Pass mongodb credentials over variables:
+  # admin_user_name: admin
+  # admin_user_password: password
 
 postgres:
   # Enable postgres deployment.
@@ -50,7 +53,10 @@ postgres:
   use_default_credentials: true
   # postgres databases and users to create, if `use_default_credentials` is set to `false`.
   admin_user_secret_name: postgres-admin-user
+  # admin user name is postgres, define password here:
+  # admin_user_password:
 
+  # Backup section
   backup:
     # Enable/Disable backup
     enabled: false

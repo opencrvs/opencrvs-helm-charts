@@ -6,12 +6,6 @@ Create MongoDB Admin user (superuser)
 {{/* Prevent secret mutation between helm upgrades */}}
 {{- $secret := lookup "v1" "Secret" .Release.Namespace .Values.mongodb.admin_user_secret_name }}
 {{- if not $secret }}
-  {{- $admin_user := randAlphaNum 8 | lower }}
-  {{- $admin_password := randAlphaNum 16 }}
-  {{- if $.Values.chart_dev_mode }}
-    {{- $admin_user = "admin" }}
-    {{- $admin_password = "password" }}
-  {{- end }}
 ---
 apiVersion: v1
 kind: Secret
@@ -23,7 +17,7 @@ metadata:
     "helm.sh/hook-weight": "0"
 type: Opaque
 data:
-  MONGODB_ADMIN_USER: {{ $admin_user | b64enc }}
-  MONGODB_ADMIN_PASSWORD: {{ $admin_password | b64enc }}
+  MONGODB_ADMIN_USER: {{ default (randAlphaNum 8) .Values.mongodb.admin_user_name | b64enc }}
+  MONGODB_ADMIN_PASSWORD: {{ default (randAlphaNum 16) .Values.mongodb.admin_user_password | b64enc }}
 {{- end }}
 {{- end }}

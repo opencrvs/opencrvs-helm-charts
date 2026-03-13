@@ -172,6 +172,15 @@ postgres:
 # All OpenCRVS services will be available under domain:
 hostname: opencrvs.localhost
 
+# This section allows manually define credentials
+credentials: {}
+  # super_user_password: Define super user password from stdin
+
+# WARNING: Use only with Tilt
+# Define path to static files internal OpenCRVS certificates
+certs: {}
+  # cert_file: File with certificate
+  # key_file: File with key
 
 ingress:
   # Access OpenCRVS services at https://<hostname>/
@@ -246,14 +255,12 @@ env:
 
 # OpenCRVS core image tag:
 image:
-  # FIXME: Put stable release version
-  tag: v1.9.0-beta-1
+  tag: v1.9.11
 
 countryconfig:
   image:
     name: opencrvs/ocrvs-countryconfig
-    # FIXME: Put stable release version
-    tag: v1.9.0-beta-1
+    tag: v1.9.11
   port: 3040
 
 ##############################################################
