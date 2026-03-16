@@ -109,10 +109,10 @@ This section allows you to configure the deployment and authentication settings 
 ## MinIO
 
 ### Configuration options
-| Key | Default value | Description |
-|-|-|-|
-| enabled | true | Enable or disable minio service |
-| use_default_credentials | true | Default credentials for MinIO are username `minioadmin` and password `minioadmin`. |
+| Key | Type | Default value | Description |
+|-|-|-|-|
+| enabled | bool | true | Enable or disable minio service |
+| use_default_credentials | bool | true | Default credentials for MinIO are username `minioadmin` and password `minioadmin`. |
 | data_storage_size | string | 1Gi | Persistent volume claim size |
 | storage_type    | string | `pvc` |  Kubernetes storage type, available options are `pvc` or `host_path`. More information are at [Storage Configuration](#storage-configuration) |
 | host_data_path  | string | `/data/minio` | Path to persistent data on VM (host) |
