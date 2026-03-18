@@ -1,0 +1,52 @@
+# Deploy Traefik as DaemonSet (one pod per matching node)
+deployment:
+  kind: DaemonSet
+  # Use host network for direct port binding (no kube-proxy overhead)
+  hostNetwork: true
+
+# Disable dashboard for security
+ingressRoute:
+  dashboard:
+    enabled: false
+
+# Logging configuration
+logs:
+  access:
+    enabled: true
+    format: common  # Apache-style access logs
+  general:
+    format: common  # Plain text format
+    level: INFO     # Log level: DEBUG, INFO, WARN, ERROR
+
+# Deploy to specific namespace
+namespaceOverride: traefik
+
+# Only run on nodes with label: traefik-role=ingress
+nodeSelector:
+  traefik-role: ingress
+
+# Port configuration
+ports:
+  web:
+    hostPort: 80  # Bind directly to node's port 80
+    protocol: TCP
+
+# Kubernetes provider configuration
+providers:
+  # Enable Traefik CRDs (IngressRoute, Middleware, etc.)
+  kubernetesCRD:
+    enabled: true
+  
+  # Disable Gateway API (not needed)
+  kubernetesGateway:
+    enabled: false
+  
+  # Enable standard Kubernetes Ingress resources
+  kubernetesIngress:
+    ingressClass: traefik  # Handle ingresses with class "traefik"
+    enabled: true
+
+# Service configuration (ClusterIP for internal routing only)
+service:
+  enabled: true
+  type: ClusterIP  # No external LB needed (using hostPort)
