@@ -87,8 +87,6 @@ spec:
               value: /secrets/public-key.pem
             - name: COUNTRY_CONFIG_HOST
               value: "0.0.0.0"
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: CLIENT_APP_URL
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
             - name: LOGIN_URL

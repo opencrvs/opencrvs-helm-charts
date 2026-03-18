@@ -59,12 +59,8 @@ spec:
               value: /secrets/public-key.pem
             - name: DOMAIN
               value: "*"
-            # TODO:
-            # value: {{ .Values.hostname | quote }}
             - name: HOST
               value: "0.0.0.0"
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: REDIS_HOST
               value: {{ .Values.redis.host | quote }}
           {{- if eq .Values.redis.auth_mode "use_secret" }}

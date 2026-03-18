@@ -23,8 +23,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: METRICS_PORT  # Similar to PORT (Check if it's the same?)
               value: "1050"
             - name: CERT_PUBLIC_KEY_PATH

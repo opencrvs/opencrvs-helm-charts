@@ -54,8 +54,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: REDIS_HOST
               value: {{ .Values.redis.host | quote }}
             - name: AUTH_URL

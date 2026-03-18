@@ -25,8 +25,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: APPLICATION_CONFIG_URL
               value: http://config.{{ .Release.Namespace }}.svc.cluster.local:2021
             - name: CERT_PUBLIC_KEY_PATH
