@@ -73,8 +73,6 @@ spec:
               value: mongodb://{{ .Values.mongodb.host }}/user-mgnt
             - name: PERFORMANCE_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/performance
-            - name: HEARTH_MONGO_URL
-              value: mongodb://{{ .Values.mongodb.host }}/hearth-dev
             - name: OPENHIM_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/openhim-dev
             - name: DASHBOARD_MONGO_URL
@@ -101,11 +99,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: PERFORMANCE_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
-            - name: HEARTH_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: HEARTH_MONGO_URL
                   name: {{ .Values.mongodb.urls_secret }}
             - name: OPENHIM_MONGO_URL
               valueFrom:
