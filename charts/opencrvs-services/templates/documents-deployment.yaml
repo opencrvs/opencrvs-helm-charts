@@ -13,6 +13,8 @@ spec:
       app: documents
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: documents
         service_name: opencrvs_documents

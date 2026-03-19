@@ -13,6 +13,8 @@ spec:
       app: workflow
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: workflow
         service_name: opencrvs_workflow

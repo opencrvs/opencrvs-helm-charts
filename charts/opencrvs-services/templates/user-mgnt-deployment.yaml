@@ -13,6 +13,8 @@ spec:
       app: user-mgnt
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: user-mgnt
         service_name: opencrvs_user-mgnt

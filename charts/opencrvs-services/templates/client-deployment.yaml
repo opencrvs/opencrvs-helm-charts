@@ -43,6 +43,8 @@ spec:
       app: client
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: client
         service_name: opencrvs_client
