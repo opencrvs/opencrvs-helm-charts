@@ -1,4 +1,5 @@
 {{- if .Values.monitoring.enabled }}
+{{- if eq .Values.ingress.mode "traefik" }}
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -26,6 +27,7 @@ spec:
   tls:
     secretName: {{ .Values.ingress.tls_secret_name }}
   {{- end }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service

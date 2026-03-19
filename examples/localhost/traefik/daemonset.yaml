@@ -21,10 +21,6 @@ logs:
 # Deploy to specific namespace
 namespaceOverride: traefik
 
-# Only run on nodes with label: traefik-role=ingress
-nodeSelector:
-  traefik-role: ingress
-
 # Port configuration
 ports:
   web:
@@ -37,13 +33,12 @@ providers:
   kubernetesCRD:
     enabled: true
   
-  # Disable Gateway API (not needed)
+  # Gateway API
   kubernetesGateway:
-    enabled: false
+    enabled: true
   
-  # Enable standard Kubernetes Ingress resources
+  # Standard Kubernetes Ingress resources
   kubernetesIngress:
-    ingressClass: traefik  # Handle ingresses with class "traefik"
     enabled: true
 
 # Service configuration (ClusterIP for internal routing only)

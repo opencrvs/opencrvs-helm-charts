@@ -1,13 +1,18 @@
 
 hostname: opencrvs.localhost
 
-# Access to Dependencies like MinIO is done via Traefik IngressRoutes
 ingress:
-  # Enable SSL for IngressRoutes.
+  # ssl_enabled:
+  # Access services at https://<hostname>/
+  # For example, https://minio.farajaland.org/
   ssl_enabled: true
-  # If traefik was deployed with custom resolver, please define resolver name here.
-  # Resolver will be attached to Traefik CRD IngressRoute
+  # Generate SSL Certificate by TLS resolver instead of using default traefik Certificate
   tls_resolver: ""
+  # mode:
+  # - gateway: Use modern Kubernetes Gateway API
+  # - traefik: (Default) Use Legacy traefik CRDs
+  # NOTE: Upgrade from traefik to gateway happens without downtime
+  mode: traefik
 
 # Kubernetes storage type, available options are `pvc` or `host_path`
 storage_type: pvc

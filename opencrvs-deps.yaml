@@ -1,0 +1,31 @@
+USER-SUPPLIED VALUES:
+backup:
+  backup_server_dir: /home/backup/prod
+  backup_server_secret: backup-server-ssh-credentials
+  enabled: false
+  schedule: 0 1 * * *
+elastalert:
+  env:
+    HTTP_POST2_ALERT_URL: http://countryconfig.opencrvs-prod.svc.cluster.local:3040/email
+elasticsearch:
+  use_default_credentials: false
+hostname: tmp-prod.opencrvs.dev
+minio:
+  use_default_credentials: false
+mongodb:
+  use_default_credentials: false
+monitoring:
+  enabled: true
+node_selector:
+  role: data1
+postgres:
+  use_default_credentials: false
+redis:
+  auth_mode: acl
+restore:
+  backup_encryption_secret: restore-encryption-secret
+  backup_server_dir: /home/backup/
+  backup_server_secret: backup-server-ssh-credentials
+  enabled: false
+  schedule: 0 0 * * *
+storage_type: host_path

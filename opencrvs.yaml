@@ -1,0 +1,51 @@
+USER-SUPPLIED VALUES:
+countryconfig:
+  image:
+    name: opencrvs/ocrvs-countryconfig
+    tag: v1.9.10
+  secrets:
+    smtp-config:
+    - ALERT_EMAIL
+    - SENDER_EMAIL_ADDRESS
+    - SMTP_HOST
+    - SMTP_PASSWORD
+    - SMTP_PORT
+    - SMTP_SECURE
+    - SMTP_USERNAME
+dashboards:
+  enabled: true
+  use_default_credentials: false
+data_seed:
+  enabled: true
+  env:
+    ACTIVATE_USERS: true
+elasticsearch:
+  auth_mode: auto
+  host: elasticsearch.opencrvs-deps-prod.svc.cluster.local
+env:
+  APN_SERVICE_URL: http://apm-server.opencrvs-deps-prod.svc.cluster.local:8200
+  QA_ENV: true
+environment_type: non-production
+hostname: tmp-prod.opencrvs.dev
+hpa:
+  enabled: false
+image:
+  tag: v1.9.10
+imagePullSecrets:
+- name: dockerhub-credentials
+influxdb:
+  host: influxdb-0.influxdb.opencrvs-deps-prod.svc.cluster.local
+minio:
+  auth_mode: use_secret
+  host: minio-0.minio.opencrvs-deps-prod.svc.cluster.local
+mongodb:
+  auth_mode: auto
+  host: mongodb-0.mongodb.opencrvs-deps-prod.svc.cluster.local
+on_restore_cronjob:
+  enabled: false
+postgres:
+  auth_mode: auto
+  host: postgres-0.postgres.opencrvs-deps-prod.svc.cluster.local
+redis:
+  auth_mode: use_secret
+  host: redis-0.redis.opencrvs-deps-prod.svc.cluster.local
