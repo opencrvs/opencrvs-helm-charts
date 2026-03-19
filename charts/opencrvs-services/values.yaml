@@ -110,6 +110,10 @@ mongodb:
     - prefix: USER_MGNT
       db: user-mgnt
       user: user-mgnt
+    - prefix: HEARTH
+      db: hearth-dev
+      user: hearth
+      roles: "[{ role: 'readWrite', db: 'hearth' }, { role: 'readWrite', db: 'performance' }, { role: 'readWrite', db: 'hearth-dev' }]"
     - prefix: CONFIG
       db: application-config
       user: config
