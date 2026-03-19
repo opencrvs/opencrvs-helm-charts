@@ -42,6 +42,8 @@ spec:
       app: auth
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: auth
         service_name: opencrvs_auth
