@@ -1,0 +1,44 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-gateway-http01-staging
+  namespace: cert-manager
+spec:
+  acme:
+    # Let's Encrypt staging server
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # Email for expiration notifications
+    email: admin@opencrvs.org  # CHANGE THIS
+    privateKeySecretRef:
+      # Secret resource that will be used to store the ACME account's private key
+      name: letsencrypt-http01-staging-account-key
+    solvers:
+    - http01:
+        gatewayHTTPRoute: # Corrected field name
+          parentRefs:
+          - name: traefik-gateway # Name of your Gateway resource
+            namespace: traefik      # Namespace where your Gateway is located
+            kind: Gateway
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-gateway-http01-prod
+  namespace: cert-manager
+spec:
+  acme:
+    # Let's Encrypt production server
+    server: https://acme-v02.api.letsencrypt.org/directory
+    
+    # Email for expiration notifications
+    email: admin@opencrvs.org  # CHANGE THIS
+    privateKeySecretRef:
+      # Secret resource that will be used to store the ACME account's private key
+      name: letsencrypt-http01-production-account-key
+    solvers:
+    - http01:
+        gatewayHTTPRoute: # Corrected field name
+          parentRefs:
+          - name: traefik-gateway # Name of your Gateway resource
+            namespace: traefik      # Namespace where your Gateway is located
+            kind: Gateway

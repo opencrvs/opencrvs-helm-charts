@@ -1,0 +1,88 @@
+deployment:
+  kind: DaemonSet
+  hostNetwork: true
+ingressRoute:
+  dashboard:
+    enabled: false
+logs:
+  access:
+    enabled: true
+    format: common
+  general:
+    format: common
+    level: INFO
+namespaceOverride: traefik
+nodeSelector:
+  traefik-role: ingress
+
+# !!!!! Only gateway API
+gateway:
+  enabled: true
+
+  # Namespace where the Gateway object will be created.
+  # With `namespaceOverride: traefik` this should match.
+  namespace: traefik
+
+  # Name of the Gateway resource
+  name: traefik-gateway
+
+  # GatewayClass managed by the chart (optional, but usually desired)
+  gatewayClass:
+    enabled: true
+    name: traefik
+    controllerName: traefik.io/gateway-controller
+    labels: {}
+    annotations: {}
+
+  labels: {}
+  annotations: {}
+
+  # Gateway listeners matching your web / websecure entrypoints
+  listeners:
+    web:
+      protocol: HTTP
+      port: 80
+      namespacePolicy:
+        from: All
+
+    websecure:
+      protocol: HTTPS
+      port: 443
+      hostname: ""
+      tls:
+        mode: Terminate
+      certificateRefs:
+        - kind: Secret
+          name: opencrvs-frontend-tls
+      namespacePolicy:
+        from: All
+
+ports:
+  web:
+    hostPort: 80
+    port: 80
+    # !!!! Only for traefik mode
+    # http:
+    #   redirections:
+    #     entryPoint:
+    #       permanent: true
+    #       scheme: https
+    #       to: websecure
+    protocol: TCP
+  websecure:
+    hostPort: 443
+    port: 443
+    http:
+      tls:
+        enabled: true
+    protocol: TCP
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesGateway:
+    enabled: true
+  kubernetesIngress:
+    enabled: true
+service:
+  enabled: true
+  type: NodePort 

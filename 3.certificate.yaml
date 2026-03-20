@@ -1,0 +1,29 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opencrvs-tls
+  namespace: traefik
+spec:
+  secretName: opencrvs-frontend-tls # Must match the secret name in the Gateway
+  privateKey:
+    rotationPolicy: Always
+  issuerRef:
+    name: letsencrypt-gateway-http01-staging
+    kind: ClusterIssuer
+  dnsNames:
+  - "tmp-prod.opencrvs.dev"
+  # Dependencies
+  - "kibana.tmp-prod.opencrvs.dev"
+  - "minio.tmp-prod.opencrvs.dev"
+  - "minio-console.tmp-prod.opencrvs.dev"
+  # Application
+  - "auth.tmp-prod.opencrvs.dev"
+  - "login.tmp-prod.opencrvs.dev"
+  - "register.tmp-prod.opencrvs.dev"
+  - "config.tmp-prod.opencrvs.dev"
+  - "countryconfig.tmp-prod.opencrvs.dev"
+  - "metabase.tmp-prod.opencrvs.dev"
+  - "events.tmp-prod.opencrvs.dev"
+  - "webhooks.tmp-prod.opencrvs.dev"
+  - "bar.tmp-prod.opencrvs.dev"
