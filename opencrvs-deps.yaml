@@ -1,4 +1,3 @@
-USER-SUPPLIED VALUES:
 backup:
   backup_server_dir: /home/backup/prod
   backup_server_secret: backup-server-ssh-credentials
@@ -29,3 +28,6 @@ restore:
   enabled: false
   schedule: 0 0 * * *
 storage_type: host_path
+
+ingress:
+  mode: gateway

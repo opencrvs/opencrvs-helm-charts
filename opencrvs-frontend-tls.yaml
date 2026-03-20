@@ -1,0 +1,22 @@
+{{- if .Values.ingress.lets_encrypt.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: "{{ .Release.Name }}-frontend"
+  namespace: cert-manager
+spec:
+  acme:
+    {{- if eq .Values.ingress.lets_encrypt.mode "staging"}}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    {{- else }}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    {{- end }}
+    email: {{ .Values.ingress.lets_encrypt.email }}
+    privateKeySecretRef:
+      name: "{{ .Release.Name }}-cert-manager-acme-key"
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
+{{- end }}

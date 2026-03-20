@@ -2,7 +2,7 @@ USER-SUPPLIED VALUES:
 countryconfig:
   image:
     name: opencrvs/ocrvs-countryconfig
-    tag: v1.9.10
+    tag: v1.9.11
   secrets:
     smtp-config:
     - ALERT_EMAIL
@@ -16,7 +16,7 @@ dashboards:
   enabled: true
   use_default_credentials: false
 data_seed:
-  enabled: true
+  enabled: false
   env:
     ACTIVATE_USERS: true
 elasticsearch:
@@ -30,7 +30,7 @@ hostname: tmp-prod.opencrvs.dev
 hpa:
   enabled: false
 image:
-  tag: v1.9.10
+  tag: v1.9.11
 imagePullSecrets:
 - name: dockerhub-credentials
 influxdb:
@@ -49,3 +49,6 @@ postgres:
 redis:
   auth_mode: use_secret
   host: redis-0.redis.opencrvs-deps-prod.svc.cluster.local
+
+ingress:
+  mode: gateway
