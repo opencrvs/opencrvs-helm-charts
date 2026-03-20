@@ -1,3 +1,4 @@
+{{- $http_scheme := include "http-scheme" . }}
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -51,7 +52,6 @@ spec:
           env:
             - name: CONTENT_SECURITY_POLICY_WILDCARD
               value: "*.{{ .Values.hostname }}"
-          {{- $http_scheme := include "http-scheme" . }}
             - name: ALLOWED_CSP_HEADER_URLS
               value: '{{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }} {{ printf "%s://%s.%s" $http_scheme $service_name .Values.hostname }}'
             - name: COUNTRY_CONFIG_URL_INTERNAL
