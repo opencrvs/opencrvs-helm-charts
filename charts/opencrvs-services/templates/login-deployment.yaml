@@ -50,9 +50,6 @@ spec:
         - name: login
           image: "ghcr.io/opencrvs/ocrvs-login:{{ .Values.image.tag }}"
           env:
-            # FIXME: Remove after OpenCRVS v2.1 release
-            - name: CONTENT_SECURITY_POLICY_WILDCARD
-              value: "*.{{ .Values.hostname }}"
             - name: CONTENT_SECURITY_POLICY_URLS
               value: '{{ include "render-external-url" (dict "service_name" "login" "Values" .Values) }} {{ printf "%s://%s" $http_scheme .Values.hostname }}'
             - name: COUNTRY_CONFIG_URL_INTERNAL
