@@ -193,7 +193,9 @@ ingress:
   # - traefik: (Default) Use Legacy traefik CRDs
   # NOTE: Upgrade from traefik to gateway happens without downtime
   mode: traefik
-
+  gateway:
+    name: traefik-gateway
+    namespace: traefik
 # See kubernetes documentation for more information on service types:
 # https://kubernetes.io/docs/concepts/services-networking/service/
 service_type: ClusterIP
@@ -274,6 +276,7 @@ auth:
   port: 4040
 
 client:
+  hostname: register
   port: 3000
   # client is an nginx docker image
   # nginx_conf_d_configmaps: see description for login.nginx_conf_d_configmaps section

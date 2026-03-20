@@ -27,6 +27,8 @@ spec:
   tls:
     secretName: {{ .Values.ingress.tls_secret_name }}
   {{- end }}
+{{- else}}
+{{- include "ingress-helper" (dict "service_name" "kibana" "Values" .Values) }}
 {{- end }}
 ---
 apiVersion: v1

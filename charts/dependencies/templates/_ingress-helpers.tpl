@@ -6,7 +6,6 @@
 {{- $service_name := .service_name }}
 {{- $ingress_mode := .Values.ingress.mode }}
 {{- $port := index .Values $service_name "port" }}
-{{- $hostname := default $service_name (index .Values $service_name "hostname") }}
 {{- if eq $ingress_mode "gateway" }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -18,8 +17,7 @@ spec:
     - name: {{ .Values.ingress.gateway.name }}
       namespace: {{ .Values.ingress.gateway.namespace }}
   hostnames:
-
-    - {{ $hostname }}.{{ .Values.hostname }}
+    - {{ $service_name }}.{{ .Values.hostname }}
   rules:
     - matches:
         - path:

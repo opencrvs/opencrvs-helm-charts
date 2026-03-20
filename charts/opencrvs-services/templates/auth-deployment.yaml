@@ -28,6 +28,8 @@ spec:
   tls:
     secretName: {{ .Values.ingress.tls_secret_name }}
   {{- end }}
+{{- else }}
+{{- include "ingress-helper" (dict "service_name" "auth" "Values" .Values) }}
 {{- end }}
 ---
 apiVersion: apps/v1

@@ -30,6 +30,31 @@ spec:
     secretName: {{ .Values.ingress.tls_secret_name }}
   {{- end }}
 {{- end }}
+{{- if eq .Values.ingress.mode "gateway" }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: login
+  namespace: {{ .Release.Namespace }}
+spec:
+  parentRefs:
+    - name: traefik-gateway
+      namespace: traefik
+  hostnames:
+    - login.{{ .Values.hostname }}
+    - {{ .Values.hostname }}
+
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: login
+          namespace: {{ .Release.Namespace }}
+          port: {{ .Values.client.port }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
