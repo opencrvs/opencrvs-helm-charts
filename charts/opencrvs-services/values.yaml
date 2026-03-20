@@ -272,17 +272,17 @@ client:
   port: 3000
   # client is an nginx docker image
   # nginx_conf_d_configmaps: see description for login.nginx_conf_d_configmaps section
+
+  # Health check probes configuration
   probes:
     liveness:
-      # /manifest.json is external countryconfig url proxied by nginx on countryconfig
-      # pod should be restarted once countryconfig is up
-      path: /manifest.json
+      path: /health/ready
       periodSeconds: 30
     readiness:
-      path: /manifest.json
+      path: /health/ready
       periodSeconds: 30
     startup:
-      path: /manifest.json
+      path: /health/ready
 
   env:
     # FIXME: Do we need define this variable?
@@ -346,17 +346,18 @@ login:
   # kubectl create configmap login-nginx-login --from-file=foo.conf --from-file=login-nginx-login.conf
   # login-nginx-login: is configmap name
   # login-nginx-login.conf is file name. it should be same as configmap with .conf ending
+
+  # Health check probes configuration
   probes:
     liveness:
       httpGet:
-        # /api/countryconfig/login-config.js is external service proxied by nginx
-        path: /api/countryconfig/login-config.js
+        path: /health/ready
     readiness:
       httpGet:
-        path: /api/countryconfig/login-config.js
+        path: /health/ready
     startup:
       httpGet:
-        path: /api/countryconfig/login-config.js
+        path: /health/ready
 
 metrics:
   port: 1050
