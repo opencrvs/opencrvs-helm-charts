@@ -1,6 +1,16 @@
 hostname: opencrvs.localhost
 ingress:
   ssl_enabled: false
+  # Lets encrypt configuration
+  letsencrypt:
+    enabled: true
+    email: admin@opencrvs.org
+    production: false
+    solvers:
+      - http01:
+            ingress:
+              ingressClassName: traefik
+
 mosip_mock:
   env:
     FOO: bar

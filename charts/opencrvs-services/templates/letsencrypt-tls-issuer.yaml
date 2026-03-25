@@ -1,0 +1,43 @@
+{{- if and .Values.ingress.ssl_enabled .Values.ingress.letsencrypt.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-issuer-http01
+  namespace: {{ .Release.Namespace }}
+spec:
+  acme:
+  {{- if .Values.ingress.letsencrypt.production }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+  {{- else }}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+  {{- end }}
+    email: {{ .Values.ingress.letsencrypt.email }}
+    privateKeySecretRef:
+      name: letsencrypt-http01-account-key
+    solvers:
+    {{- with .Values.ingress.letsencrypt.solvers }}
+    {{- toYaml . | nindent 6 }}
+    {{- end }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opencrvs-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ default "opencrvs-frontend-tls" .Values.ingress.tls_secret_name }}
+  privateKey:
+    rotationPolicy: Always
+  issuerRef:
+    name: letsencrypt-issuer-http01
+    kind: Issuer
+  dnsNames:
+  - "auth.{{ $.Values.hostname }}"
+  - "login.{{ $.Values.hostname }}"
+  - "register.{{ $.Values.hostname }}"
+  - "config.{{ $.Values.hostname }}"
+  - "countryconfig.{{ $.Values.hostname }}"
+  - "metabase.{{ $.Values.hostname }}"
+  - "events.{{ $.Values.hostname }}"
+  - "webhooks.{{ $.Values.hostname }}"
+{{- end }}

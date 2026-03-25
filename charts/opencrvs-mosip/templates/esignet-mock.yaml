@@ -35,6 +35,9 @@ spec:
   {{- if .Values.ingress.tls_resolver }}
   tls:
     certResolver: {{ .Values.ingress.tls_resolver }}
+  {{- else if or .Values.ingress.letsencrypt.enabled .Values.ingress.tls_secret_name }}
+  tls:
+    secretName: {{ .Values.ingress.tls_secret_name | default "opencrvs-frontend-tls" }}
   {{- end }}
 ---
 apiVersion: apps/v1
