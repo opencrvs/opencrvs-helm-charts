@@ -22,22 +22,16 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: opencrvs-tls
+  name: opencrvs-mosip-tls
   namespace: {{ .Release.Namespace }}
 spec:
-  secretName: {{ default "opencrvs-frontend-tls" .Values.ingress.tls_secret_name }}
+  secretName: {{ default "opencrvs-mosip-tls" .Values.ingress.tls_secret_name }}
   privateKey:
     rotationPolicy: Always
   issuerRef:
     name: letsencrypt-issuer-http01
     kind: Issuer
   dnsNames:
-  - "auth.{{ $.Values.hostname }}"
-  - "login.{{ $.Values.hostname }}"
-  - "register.{{ $.Values.hostname }}"
-  - "config.{{ $.Values.hostname }}"
-  - "countryconfig.{{ $.Values.hostname }}"
-  - "metabase.{{ $.Values.hostname }}"
-  - "events.{{ $.Values.hostname }}"
-  - "webhooks.{{ $.Values.hostname }}"
+  - "esignet-mock.{{ .Values.hostname }}"
+  - "mosip-api.{{ .Values.hostname }}"
 {{- end }}
