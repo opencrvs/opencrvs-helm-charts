@@ -32,12 +32,7 @@ spec:
     name: letsencrypt-issuer-http01
     kind: Issuer
   dnsNames:
-  - "auth.{{ $.Values.hostname }}"
-  - "login.{{ $.Values.hostname }}"
-  - "register.{{ $.Values.hostname }}"
-  - "config.{{ $.Values.hostname }}"
-  - "countryconfig.{{ $.Values.hostname }}"
-  - "metabase.{{ $.Values.hostname }}"
-  - "events.{{ $.Values.hostname }}"
-  - "webhooks.{{ $.Values.hostname }}"
+  - "kibana.{{ $.Values.hostname }}"
+  - "minio.{{ $.Values.hostname }}"
+  - "minio-console.{{ $.Values.hostname }}"
 {{- end }}
