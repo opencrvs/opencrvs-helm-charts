@@ -189,14 +189,19 @@ ingress:
   # Generate SSL Certificate by TLS resolver instead of using default traefik Certificate
   tls_resolver: ""
   # Lets encrypt configuration
+  # cert-manager should be deployed
   letsencrypt:
+    # Use letsencrypt as service provider for TLS certificates
     enabled: true
+    # Contact email
     email: admin@opencrvs.org
+    # Use production/staging lets encrypt certificates
     production: false
+    # Certificate manager solver configuration
     solvers:
       - http01:
-            ingress:
-              ingressClassName: traefik
+          ingress:
+            ingressClassName: traefik
 # See kubernetes documentation for more information on service types:
 # https://kubernetes.io/docs/concepts/services-networking/service/
 service_type: ClusterIP
