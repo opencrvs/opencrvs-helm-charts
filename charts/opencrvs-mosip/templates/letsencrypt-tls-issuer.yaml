@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt-issuer-http01
+  name: letsencrypt-mosip-issuer-http01
   namespace: {{ .Release.Namespace }}
 spec:
   acme:
@@ -13,7 +13,7 @@ spec:
   {{- end }}
     email: {{ .Values.ingress.letsencrypt.email }}
     privateKeySecretRef:
-      name: letsencrypt-http01-account-key
+      name: letsencrypt-mosip-http01-account-key
     solvers:
     {{- with .Values.ingress.letsencrypt.solvers }}
     {{- toYaml . | nindent 6 }}
@@ -29,7 +29,7 @@ spec:
   privateKey:
     rotationPolicy: Always
   issuerRef:
-    name: letsencrypt-issuer-http01
+    name: letsencrypt-mosip-issuer-http01
     kind: Issuer
   dnsNames:
   - "esignet-mock.{{ .Values.hostname }}"

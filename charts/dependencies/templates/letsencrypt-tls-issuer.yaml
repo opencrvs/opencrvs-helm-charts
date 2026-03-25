@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt-issuer-http01
+  name: "letsencrypt-deps-issuer-http01"
   namespace: {{ .Release.Namespace }}
 spec:
   acme:
@@ -13,7 +13,7 @@ spec:
   {{- end }}
     email: {{ .Values.ingress.letsencrypt.email }}
     privateKeySecretRef:
-      name: letsencrypt-http01-account-key
+      name: "letsencrypt-deps-http01-account-key"
     solvers:
     {{- with .Values.ingress.letsencrypt.solvers }}
     {{- toYaml . | nindent 6 }}
@@ -22,14 +22,14 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: opencrvs-tls
+  name: "opencrvs-deps-tls"
   namespace: {{ .Release.Namespace }}
 spec:
-  secretName: {{ default "opencrvs-frontend-tls" .Values.ingress.tls_secret_name }}
+  secretName: {{ default "opencrvs-deps-tls" .Values.ingress.tls_secret_name }}
   privateKey:
     rotationPolicy: Always
   issuerRef:
-    name: letsencrypt-issuer-http01
+    name: letsencrypt-deps-issuer-http01
     kind: Issuer
   dnsNames:
   - "kibana.{{ $.Values.hostname }}"
