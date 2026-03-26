@@ -47,7 +47,8 @@ spec:
                   name: {{ .Values.elasticsearch.admin_user_secret_name }}
                   key: ELASTIC_PASSWORD
             - name: ELASTICSEARCH_HOSTS
-              value: elasticsearch-0.elasticsearch.{{ .Release.Namespace }}.svc.cluster.local:9200
+              {{- $elastic_host := default (printf "elasticsearch-0.elasticsearch.%s.svc.cluster.local" $.Release.Namespace) $.Values.elasticsearch.host }}
+              value: {{ $elastic_host }}:9200
             - name: ELASTICSEARCH_USERNAME
               value: "elastic"
             - name: ELASTICSEARCH_PASSWORD
