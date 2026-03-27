@@ -38,7 +38,7 @@ spec:
             - name: MINIO_PORT
               value: {{ .Values.minio.port | quote }}
             - name: MINIO_PROTOCOL
-              value: '{{ .Values.minio.protocol | default (include "http-scheme" .) }}:'
+              value: '{{ .Values.minio.external_protocol | default (include "http-scheme" .) }}:'
             - name: MINIO_URL
               value: {{ .Values.minio.external_url  | default (printf "minio.%s" .Values.hostname) }}
           {{- if or (eq .Values.minio.auth_mode "auto") (eq .Values.minio.auth_mode "use_secret") }}

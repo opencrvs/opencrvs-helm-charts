@@ -70,13 +70,6 @@ spec:
               value: http://config.{{ .Release.Namespace }}.svc.cluster.local:2021
             - name: COUNTRY_CONFIG_URL
               value: {{ include "render-external-url" (dict "service_name" "countryconfig" "Values" .Values) }}
-            # FIXME: Do we use MINIO_URL variable inside client container?
-            - name: MINIO_URL
-          {{- if and .Values.minio.protocol .Values.minio.external_url }}
-              value: {{ (printf "%s://%s" .Values.minio.protocol .Values.minio.external_url ) }}
-          {{- else }}
-              value: {{ (include "render-external-url" (dict "service_name" "minio" "Values" .Values) ) }}
-          {{- end }}
           {{- include "render-env-vars" (dict "service_name" "client" "Values" .Values) }}
           {{- include "resources-helper" (dict "service_name" "client" "Values" .Values) | indent 10 }}
           {{- include "probes-helper" (dict "service_name" "client" "Values" .Values) | indent 10 }}
