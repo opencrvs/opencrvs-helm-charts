@@ -1,0 +1,46 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-migrations
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "20"
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: postgres-migrations
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: postgres-migrations
+          image: {{ .Values.postgres.migrationJob.image | quote }}
+          imagePullPolicy: IfNotPresent
+          command:
+            - /work/migrate.sh
+          env:
+            - name: DB_HOST
+              value: {{ required "postgres.host is required" .Values.postgres.host | quote }}
+            - name: DB_PORT
+              value: {{ default "5432" .Values.postgres.port | quote }}
+{{- range $roleName, $roleCfg := .Values.postgres.roles }}
+            - name: {{ include "env-safe" $roleName }}_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $roleCfg.secretName }}
+                  key: {{ default "username" $roleCfg.usernameKey }}
+            - name: {{ include "env-safe" $roleName }}_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $roleCfg.secretName }}
+                  key: {{ default "password" $roleCfg.passwordKey }}
+{{- end }}
+          volumeMounts:
+            - name: migrations
+              mountPath: /work
+      volumes:
+        - name: migrations
+          configMap:
+            name: postgres-migrations
+            defaultMode: 0755

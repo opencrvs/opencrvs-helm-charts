@@ -167,6 +167,66 @@ postgres:
   on_restore_cronjob:
     enabled: false
     schedule: "0 2 * * *"
+
+  bootstrapJob:
+    image: postgres:16
+    backoffLimit: 0
+
+  migrationJob:
+    image: bash
+    backoffLimit: 0
+  # New way to manage databases and credentials
+  # Define databases and roles
+  # databases:
+  databases: {}
+  #   events:
+  #     create: true
+  #     schemas:
+  #       app:
+  #         appRole: events_app
+  #         migratorRole: events_migrator
+  #         ownerRole: events_migrator
+  #         # FIXME: not implemented
+  #         runMigrations: true
+  #       analytics:
+  #         appRole: analytics_app
+  #         migratorRole: analytics_migrator
+  #         ownerRole: analytics_migrator
+  #         # FIXME: not implemented
+  #         runMigrations: true
+
+  # roles:
+  roles: {}
+  #   events_app:
+  #     secretName: events-app-db
+  #   events_migrator:
+  #     secretName: events-migrator-db
+  #   analytics_app:
+  #     secretName: analytics-app-db
+  #   analytics_migrator:
+  #     secretName: analytics-migrator-db
+
+  # Custom access and grants for non-standard databases and roles, for example for ICD11 reference data database
+  # customAccess:
+  customAccess: []
+  # - role: reporting_user
+  #   database: events
+  #   schema: analytics
+  #   grants:
+  #     schema: [USAGE]
+  #   tables:
+  #     daily_stats: [SELECT]
+  #     monthly_stats: [SELECT]
+  #   views:
+  #     v_birth_summary: [SELECT]
+
+  # customGrantSql:
+  customGrantSql: []  
+  # - role: support_user
+  #   database: events
+  #   sql: |
+  #     GRANT EXECUTE ON FUNCTION analytics.refresh_stats() TO "support_user";
+
 ###############################################################################
 # Application configuration
 ###############################################################################

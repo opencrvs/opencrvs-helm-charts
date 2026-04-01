@@ -1,0 +1,141 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-bootstrap
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+data:
+  roles.yaml: |
+{{ include "postgres.normalized.roles" . | indent 4 }}
+
+  databases.yaml: |
+{{ include "postgres.normalized.databases" . | indent 4 }}
+
+  schemas.yaml: |
+{{ include "postgres.normalized.schemas" . | indent 4 }}
+
+  bootstrap.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    export PGPASSWORD="${POSTGRES_ADMIN_PASSWORD}"
+    POSTGRES_HOST="${POSTGRES_HOST}"
+    POSTGRES_PORT="${POSTGRES_PORT:-5432}"
+    ADMIN_USER="${POSTGRES_ADMIN_USERNAME}"
+    ADMIN_DB="postgres"
+
+    ROLE_DIR="/work/roles"
+    DB_DIR="/work/databases"
+    SCHEMA_DIR="/work/schemas"
+
+    ensure_role() {
+      local role_name="$1"
+      local role_username="$2"
+      local role_password="$3"
+
+    psql -v ON_ERROR_STOP=1 \
+         -v role_name="$role_name" \
+         -v role_password="$role_password" \
+         -U "${ADMIN_USER}" -d "${ADMIN_DB}" -h "$POSTGRES_HOST" -p "$POSTGRES_PORT"
+    <<'SQL'
+    DO $$
+    BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = :'role_name') THEN
+        RAISE NOTICE 'Creating role %', :'role_name';
+        EXECUTE format('CREATE ROLE %I LOGIN PASSWORD %L', :'role_name', :'role_password');
+      ELSE
+        RAISE NOTICE 'Altering role %', :'role_name';
+        EXECUTE format('ALTER ROLE %I WITH LOGIN PASSWORD %L', :'role_name', :'role_password');
+      END IF;
+    END
+    $$;
+    SQL
+    }
+
+    ensure_database() {
+      local db_name="$1"
+
+      psql -v ON_ERROR_STOP=1 -U "${ADMIN_USER}" -d "${ADMIN_DB}" -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" <<SQL
+      SELECT 'CREATE DATABASE "${db_name}"'
+      WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${db_name}') \gexec
+    SQL
+    }
+
+    ensure_schema_and_grants() {
+      local db_name="$1"
+      local schema_name="$2"
+      local owner_role="$3"
+      local migrator_role="$4"
+      local app_role="$5"
+
+      psql -v ON_ERROR_STOP=1 -U "${ADMIN_USER}" -d "${db_name}" -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" <<SQL
+      CREATE SCHEMA IF NOT EXISTS "${schema_name}" AUTHORIZATION "${owner_role}";
+      ALTER SCHEMA "${schema_name}" OWNER TO "${owner_role}";
+
+      GRANT CONNECT ON DATABASE "${db_name}" TO "${migrator_role}";
+      GRANT CONNECT ON DATABASE "${db_name}" TO "${app_role}";
+
+      GRANT USAGE, CREATE ON SCHEMA "${schema_name}" TO "${migrator_role}";
+      GRANT USAGE ON SCHEMA "${schema_name}" TO "${app_role}";
+
+      GRANT SELECT, INSERT, UPDATE, DELETE, REFERENCES, TRIGGER
+        ON ALL TABLES IN SCHEMA "${schema_name}" TO "${migrator_role}";
+      GRANT USAGE, SELECT, UPDATE
+        ON ALL SEQUENCES IN SCHEMA "${schema_name}" TO "${migrator_role}";
+      GRANT EXECUTE
+        ON ALL FUNCTIONS IN SCHEMA "${schema_name}" TO "${migrator_role}";
+
+      GRANT SELECT, INSERT, UPDATE, DELETE
+        ON ALL TABLES IN SCHEMA "${schema_name}" TO "${app_role}";
+      GRANT USAGE, SELECT, UPDATE
+        ON ALL SEQUENCES IN SCHEMA "${schema_name}" TO "${app_role}";
+      GRANT EXECUTE
+        ON ALL FUNCTIONS IN SCHEMA "${schema_name}" TO "${app_role}";
+
+      ALTER DEFAULT PRIVILEGES FOR ROLE "${owner_role}" IN SCHEMA "${schema_name}"
+        GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO "${app_role}";
+      ALTER DEFAULT PRIVILEGES FOR ROLE "${owner_role}" IN SCHEMA "${schema_name}"
+        GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO "${app_role}";
+      ALTER DEFAULT PRIVILEGES FOR ROLE "${owner_role}" IN SCHEMA "${schema_name}"
+        GRANT EXECUTE ON FUNCTIONS TO "${app_role}";
+
+      ALTER DEFAULT PRIVILEGES FOR ROLE "${owner_role}" IN SCHEMA "${schema_name}"
+        GRANT SELECT, INSERT, UPDATE, DELETE, REFERENCES, TRIGGER ON TABLES TO "${migrator_role}";
+      ALTER DEFAULT PRIVILEGES FOR ROLE "${owner_role}" IN SCHEMA "${schema_name}"
+        GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO "${migrator_role}";
+      ALTER DEFAULT PRIVILEGES FOR ROLE "${owner_role}" IN SCHEMA "${schema_name}"
+        GRANT EXECUTE ON FUNCTIONS TO "${migrator_role}";
+    SQL
+    }
+
+    echo "==> Creating roles"
+{{- range $roleName, $roleCfg := .Values.postgres.roles }}
+    ensure_role \
+      "{{ $roleName }}" \
+      "${{ include "env-safe" $roleName }}_USERNAME" \
+      "${{ include "env-safe" $roleName }}_PASSWORD"
+{{- end }}
+
+    echo "==> Creating databases"
+{{- range $dbName, $dbCfg := .Values.postgres.databases }}
+{{- if (default true $dbCfg.create) }}
+    ensure_database "{{ $dbName }}"
+{{- end }}
+{{- end }}
+
+    echo "==> Creating schemas and grants"
+{{- range $dbName, $dbCfg := .Values.postgres.databases }}
+{{- range $schemaName, $schemaCfg := $dbCfg.schemas }}
+    ensure_schema_and_grants \
+      "{{ $dbName }}" \
+      "{{ $schemaName }}" \
+      "{{ $schemaCfg.ownerRole }}" \
+      "{{ $schemaCfg.migratorRole }}" \
+      "{{ $schemaCfg.appRole }}"
+{{- end }}
+{{- end }}
+
+    echo "Bootstrap completed successfully"

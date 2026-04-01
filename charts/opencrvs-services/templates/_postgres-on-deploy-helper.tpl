@@ -58,6 +58,7 @@
           name: {{ .Values.postgres.users_secret }}
           key: EVENTS_ANALYTICS_POSTGRES_PASSWORD
 {{- end }}
+
 {{- define "postgres-on-deploy.volumes" -}}
 - name: postgres-on-deploy-script
   configMap:
