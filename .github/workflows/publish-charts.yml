@@ -35,21 +35,21 @@ jobs:
             helm push packages/$package oci://ghcr.io/opencrvs
           done
 
-- name: Generate summary
-  run: |
-    {
-      echo "## 📦 Helm Charts Release"
-      echo ""
-      echo "| Chart | Version | App Version | Chart link |"
-      echo "|-------|--------|------------|------------|"
+      - name: Generate summary
+        run: |
+          {
+            echo "## 📦 Helm Charts Release"
+            echo ""
+            echo "| Chart | Version | App Version | Chart link |"
+            echo "|-------|--------|------------|------------|"
 
-      for chart in charts/*; do
-        [ -f "$chart/Chart.yaml" ] || continue
+            for chart in charts/*; do
+              [ -f "$chart/Chart.yaml" ] || continue
 
-        NAME=$(yq '.name' "$chart/Chart.yaml")
-        VERSION=$(yq '.version' "$chart/Chart.yaml")
-        APP_VERSION=$(yq '.appVersion // "N/A"' "$chart/Chart.yaml")
-        CHART_LINK="oci://ghcr.io/opencrvs/$NAME:$VERSION"
-        echo "| $NAME | $VERSION | $APP_VERSION | $CHART_LINK |"
-      done
-    } >> $GITHUB_STEP_SUMMARY
+              NAME=$(yq '.name' "$chart/Chart.yaml")
+              VERSION=$(yq '.version' "$chart/Chart.yaml")
+              APP_VERSION=$(yq '.appVersion // "N/A"' "$chart/Chart.yaml")
+              CHART_LINK="oci://ghcr.io/opencrvs/$NAME:$VERSION"
+              echo "| $NAME | $VERSION | $APP_VERSION | $CHART_LINK |"
+            done
+          } >> $GITHUB_STEP_SUMMARY
