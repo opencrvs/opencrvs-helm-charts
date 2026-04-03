@@ -17,6 +17,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Pre-release checks
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         run: |
             for chart in charts/*; do
               [ -f "$chart/Chart.yaml" ] || continue
