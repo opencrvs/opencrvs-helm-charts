@@ -151,6 +151,16 @@ helm upgrade --install opencrvs oci://ghcr.io/opencrvs/opencrvs-services \
             <td>MinIO port configuration.</td>
         </tr>
         <tr>
+            <td>minio.external_url</td>
+            <td><code>minio.`opencrvs hostname>`</code></td>
+            <td>external `host/ip`[:port] available for client browser to issue signed document URL. </td>
+        </tr>
+        <tr>
+            <td>minio.external_protocol</td>
+            <td>https</td>
+            <td>external protocol (http or https) available for client browser. Default: helm chart http_scheme helper value</td>
+        </tr>
+        <tr>
             <td>minio.auth_mode</td>
             <td>disabled</td>
             <td>  Following values are allowed

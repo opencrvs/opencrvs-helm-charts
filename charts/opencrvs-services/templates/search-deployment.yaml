@@ -13,6 +13,8 @@ spec:
       app: search
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: search
         service_name: opencrvs_search

@@ -38,7 +38,8 @@ spec:
         env:
           # Elasticsearch integration
           - name: ELASTICSEARCH_HOST
-            value: http://elasticsearch-0.elasticsearch.{{ .Release.Namespace }}.svc.cluster.local:9200
+            {{- $elastic_host := default (printf "elasticsearch-0.elasticsearch.%s.svc.cluster.local" $.Release.Namespace) $.Values.elasticsearch.host }}
+            value: http://{{ $elastic_host }}:9200
           - name: ELASTICSEARCH_USERNAME
             value: 'elastic'
           - name: ELASTICSEARCH_PASSWORD

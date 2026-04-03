@@ -43,6 +43,8 @@ spec:
       app: client
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: client
         service_name: opencrvs_client
@@ -61,7 +63,7 @@ spec:
             - name: GATEWAY_URL_INTERNAL
               value: http://gateway.{{ .Release.Namespace }}.svc.cluster.local:7070
             - name: LOGIN_URL
-              value: https://login.{{ .Values.hostname }}
+              value: {{ include "render-external-url" (dict "service_name" "login" "Values" .Values) }}
             - name: AUTH_URL_INTERNAL
               value: http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040
             - name: CONFIG_API_URL_INTERNAL

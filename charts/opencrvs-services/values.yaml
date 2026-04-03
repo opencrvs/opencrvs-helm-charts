@@ -55,6 +55,9 @@ influxdb:
 minio:
   host: minio-0.minio.opencrvs-deps-dev.svc.cluster.local
   port: "3535"
+  # external_url: external <host/ip>[:port] available for client browser to issue signed document URL. 
+  #                   Default: minio.<opencrvs domain>
+  # external_protocol: external protocol (http or https) available for client browser. (Default: helm chart http_scheme)
   # auth_mode:
   # - disabled: No authentication enabled for MongoDB, password-less access to databases
   # - use_secret: Kubernetes Secrets needs to be created manually, users are managed by MongoDB administrator, but helm
@@ -172,6 +175,15 @@ postgres:
 # All OpenCRVS services will be available under domain:
 hostname: opencrvs.localhost
 
+# This section allows manually define credentials
+credentials: {}
+  # super_user_password: Define super user password from stdin
+
+# WARNING: Use only with Tilt
+# Define path to static files internal OpenCRVS certificates
+certs: {}
+  # cert_file: File with certificate
+  # key_file: File with key
 
 ingress:
   # Access OpenCRVS services at https://<hostname>/
@@ -246,14 +258,12 @@ env:
 
 # OpenCRVS core image tag:
 image:
-  # FIXME: Put stable release version
-  tag: v1.9.0-beta-1
+  tag: v1.9.11
 
 countryconfig:
   image:
     name: opencrvs/ocrvs-countryconfig
-    # FIXME: Put stable release version
-    tag: v1.9.0-beta-1
+    tag: v1.9.11
   port: 3040
 
 ##############################################################
@@ -312,7 +322,6 @@ gateway:
     CHECK_INVALID_TOKEN: "true"
     CONFIG_SMS_CODE_EXPIRY_SECONDS: "600"
     CONFIG_TOKEN_EXPIRY_SECONDS: "604800"
-    MINIO_BUCKET: "ocrvs"
     COUNTRY: FAR
     DISABLE_RATE_LIMIT: "true"
     LANGUAGES: "en,fr"

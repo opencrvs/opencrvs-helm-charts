@@ -66,7 +66,7 @@ if [[ "$DB_EXISTS" == "1" ]]; then
 else
   echo "Database '$TARGET_DB' does not exist. Proceeding with initialization."
   psql -v ON_ERROR_STOP=1 -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d postgres \
-       -c "CREATE DATABASE ${TARGET_DB};" || echo "❌ Cluster-wide SQL failed"; exit 1;
+       -c "CREATE DATABASE ${TARGET_DB};" || { echo "❌ Cluster-wide SQL failed"; exit 1; }
 fi
 
 create_or_update_role "$EVENTS_MIGRATOR_ROLE" "$EVENTS_MIGRATOR_POSTGRES_PASSWORD" "$TARGET_DB"

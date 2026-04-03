@@ -128,7 +128,8 @@ spec:
                   name: {{ .Values.elasticsearch.users_secret }}
                   key: KIBANA_SYSTEM_ELASTIC_PASSWORD
             - name: KIBANA_SYSTEM_ELASTIC_URL
-              value: http://elasticsearch-0.elasticsearch.{{ .Release.Namespace }}.svc.cluster.local:9200
+              {{- $elastic_host := default (printf "elasticsearch-0.elasticsearch.%s.svc.cluster.local" $.Release.Namespace) $.Values.elasticsearch.host }}
+              value: http://{{ $elastic_host }}:9200
             - name: KIBANA_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:

@@ -42,8 +42,6 @@ spec:
       app: events
   template:
     metadata:
-      # TODO: If force-restart works well, apply to the rest of templates
-      # We rotate secrets every deploy, pods need to be restarted as well
       annotations:
         lastdeploy-timestamp: {{ now | quote }}
       labels:

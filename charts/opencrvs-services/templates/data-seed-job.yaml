@@ -9,6 +9,7 @@ metadata:
   labels:
     app: data-seed
   name: data-seed
+  namespace: {{ .Release.Namespace }}
 spec:
   template:
     metadata:

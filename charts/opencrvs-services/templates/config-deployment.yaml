@@ -42,6 +42,8 @@ spec:
       app: config
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: config
         service_name: opencrvs_config

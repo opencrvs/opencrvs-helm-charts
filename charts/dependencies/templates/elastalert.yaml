@@ -18,7 +18,8 @@ spec:
           image: appropriate/curl
           env:
             - name: ES_HOST
-              value: elasticsearch-0.elasticsearch.{{ .Release.Namespace }}.svc.cluster.local
+              {{- $elastic_host := default (printf "elasticsearch-0.elasticsearch.%s.svc.cluster.local" $.Release.Namespace) $.Values.elasticsearch.host }}
+              value: {{ $elastic_host }}
             - name: ES_PORT
               value: "9200"
             - name: ES_USERNAME
@@ -81,7 +82,8 @@ spec:
           image: jertel/elastalert2:2.25.0
           env:
             - name: ES_HOST
-              value: elasticsearch-0.elasticsearch.{{ .Release.Namespace }}.svc.cluster.local
+              {{- $elastic_host := default (printf "elasticsearch-0.elasticsearch.%s.svc.cluster.local" $.Release.Namespace) $.Values.elasticsearch.host }}
+              value: {{ $elastic_host }}
             - name: ES_PORT
               value: "9200"
             - name: ES_USERNAME

@@ -109,10 +109,10 @@ This section allows you to configure the deployment and authentication settings 
 ## MinIO
 
 ### Configuration options
-| Key | Default value | Description |
-|-|-|-|
-| enabled | true | Enable or disable minio service |
-| use_default_credentials | true | Default credentials for MinIO are username `minioadmin` and password `minioadmin`. |
+| Key | Type | Default value | Description |
+|-|-|-|-|
+| enabled | bool | true | Enable or disable minio service |
+| use_default_credentials | bool | true | Default credentials for MinIO are username `minioadmin` and password `minioadmin`. |
 | data_storage_size | string | 1Gi | Persistent volume claim size |
 | storage_type    | string | `pvc` |  Kubernetes storage type, available options are `pvc` or `host_path`. More information are at [Storage Configuration](#storage-configuration) |
 | host_data_path  | string | `/data/minio` | Path to persistent data on VM (host) |
@@ -254,7 +254,7 @@ You control persistence using the `storage_type` option, which can be set **glob
   - **`pvc`** – Use the default Kubernetes StorageClass to create a PersistentVolumeClaim.
   - **`host_path`** – Use a directory on the Kubernetes node for persistence. The directory must be created with the appropriate permissions. This option is the default for legacy VMs running Docker Swarm that have been migrated to Kubernetes.
 - **`data_storage_size`** – Define the size of the PVC claim per datastore/service. Please check the Values file for supported keys.
-- **`host_data_path` / `host_backup_path`** – Optionally specify data and backup paths per datastore/service. For example, Elasticsearch supports the `host_data_path` and `host_backup_path` properties to specify where data and backups should be stored. If the directory does not exist, it will be created during deployment.
+- **`host_data_path`** – Optionally specify data path per datastore/service. For example, Elasticsearch use the `host_data_path` property to specify where data should be stored. If the directory does not exist, it will be created during deployment.
 - **`node_selector`** – Use a node selector to control where the pod is scheduled. This option can be defined globally or per service.
 
 ---
@@ -269,12 +269,13 @@ elasticsearch:
   storage_class_name: ""  # Optional: specify a StorageClass or leave as "" for default
 ```
 
-#### Use hostPath for Elasticsearch data and backups (legacy volumes, on-prem, etc):
+#### Use hostPath for MinIO data (legacy volumes, on-prem, etc):
 ```yaml
-elasticsearch:
-  storage_type: host_path
-  host_data_path: /data/elasticsearch  # default value
-  host_backup_path: /data/backups/elasticsearch  # default value
+minio:
+  storage_type: host_path # Store data on filesystem (default)
+  node_selector:
+    role: data2 # Store data on worker node instead of master, default is 'data1'
+  host_data_path: /data/minio  # default value
 ```
 
 ---
