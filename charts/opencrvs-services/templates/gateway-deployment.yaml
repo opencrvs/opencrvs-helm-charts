@@ -101,8 +101,6 @@ spec:
               value: "http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/"
             - name: WEBHOOKS_URL
               value: "http://webhooks.{{ .Release.Namespace }}.svc.cluster.local:2525/"
-            - name: WORKFLOW_URL
-              value: "http://workflow.{{ .Release.Namespace }}.svc.cluster.local:5050/"
             - name: EVENTS_URL
               value: "http://events.{{ .Release.Namespace }}.svc.cluster.local:5555/"
             - name: COUNTRY_CONFIG_URL

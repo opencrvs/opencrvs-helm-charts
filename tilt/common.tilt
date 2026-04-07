@@ -100,8 +100,7 @@ opensrvs_services = [
   'scheduler', 
   'search', 
   'user-mgnt', 
-  'webhooks', 
-  'workflow'
+  'webhooks' 
 ]
 
 opensrvs_postdeploy_jobs = [
