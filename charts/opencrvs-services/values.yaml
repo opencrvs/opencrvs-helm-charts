@@ -390,6 +390,8 @@ workflow:
 
 events:
   port: 5555
+  env:
+    TWO_FA_ENABLED: false
   probes:
     liveness:
       path: /health/ready
