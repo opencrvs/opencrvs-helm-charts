@@ -117,9 +117,6 @@ mongodb:
       db: hearth-dev
       user: hearth
       roles: "[{ role: 'readWrite', db: 'hearth' }, { role: 'readWrite', db: 'performance' }, { role: 'readWrite', db: 'hearth-dev' }]"
-    - prefix: CONFIG
-      db: application-config
-      user: config
     - prefix: PERFORMANCE
       db: performance
       user: performance
@@ -291,9 +288,6 @@ client:
   env:
     # FIXME: Do we need define this variable?
     DECLARED_DECLARATION_SEARCH_QUERY_COUNT: 100
-
-config:
-  port: 2021
 
 dashboards:
   enabled: false
