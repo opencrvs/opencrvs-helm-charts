@@ -26,7 +26,6 @@ helm_resource(
 # to all workloads that use them
 traefik_deps = [
   'auth', 
-  'config',
   'client',
   'countryconfig',
   'events',
@@ -86,8 +85,7 @@ opensrvs_predeploy_jobs = [
 ]
 
 opensrvs_services = [
-  'auth', 
-  'config',
+  'auth',
   'client',
   'countryconfig',
   'documents', 
