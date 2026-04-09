@@ -243,7 +243,6 @@ hearth:
 # Global environment variables applied to
 # all OpenCRVS microservices (Kubernetes PODs):
 env:
-  QA_ENV: true
   NODE_ENV: production
   MINIO_BUCKET: ocrvs
   # LOG_LEVEL: debug
@@ -268,6 +267,8 @@ countryconfig:
 # Per service configuration:
 auth:
   port: 4040
+  env:
+    TWO_FA_ENABLED: false
 
 client:
   port: 3000
@@ -314,6 +315,7 @@ documents:
 gateway:
   port: 7070
   env:
+    TWO_FA_ENABLED: false
     CHECK_INVALID_TOKEN: "true"
     CONFIG_SMS_CODE_EXPIRY_SECONDS: "600"
     CONFIG_TOKEN_EXPIRY_SECONDS: "604800"
@@ -373,7 +375,9 @@ search:
 
 user_mgnt:
   port: 3030
-  
+  env:
+    DEFAULT_USER_PASSWORD: "test"
+
 
 webhooks:
   port: 2525
@@ -385,6 +389,8 @@ workflow:
 
 events:
   port: 5555
+  env:
+    TWO_FA_ENABLED: false
   probes:
     liveness:
       path: /health/ready
