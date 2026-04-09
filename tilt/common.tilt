@@ -94,7 +94,6 @@ opensrvs_services = [
   'login',
   'metrics',  
   'notification', 
-  'scheduler', 
   'search', 
   'user-mgnt', 
   'webhooks', 
