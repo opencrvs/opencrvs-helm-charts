@@ -81,8 +81,6 @@ spec:
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
             - name: LOGIN_URL
               value: {{ include "render-external-url" (dict "service_name" "login" "Values" .Values) }}
-            - name: APPLICATION_CONFIG_URL
-              value: "http://config.{{ .Release.Namespace }}.svc.cluster.local:2021"
             - name: AUTH_URL
               value: http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040
             - name: DOCUMENTS_URL

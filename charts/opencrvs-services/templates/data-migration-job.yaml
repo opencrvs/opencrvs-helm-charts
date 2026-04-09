@@ -69,8 +69,6 @@ spec:
                   key: MONGODB_ADMIN_PASSWORD
           {{- end }}
           {{- if eq .Values.mongodb.auth_mode "disabled" }}
-            - name: APPLICATION_CONFIG_MONGO_URL
-              value: mongodb://{{ .Values.mongodb.host }}/application-config
             - name: USER_MGNT_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/user-mgnt
             - name: PERFORMANCE_MONGO_URL
@@ -84,11 +82,6 @@ spec:
             - name: EVENTS_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/events
           {{- else if or (eq .Values.mongodb.auth_mode "auto")  (eq .Values.mongodb.auth_mode "use_secret") }}
-            - name: APPLICATION_CONFIG_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: CONFIG_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
             - name: DASHBOARD_MONGO_URL
               valueFrom:
                 secretKeyRef:
