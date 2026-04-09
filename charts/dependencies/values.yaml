@@ -250,7 +250,6 @@ redis:
   # Variables are store in secret named redis-opencrvs-users
   auth_users:
     - GATEWAY
-    - WORKFLOW
     - AUTH
     - WEBHOOKS
 

@@ -378,10 +378,6 @@ webhooks:
   port: 2525
 
 
-workflow:
-  port: 5050
-
-
 events:
   port: 5555
   env:
