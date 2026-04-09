@@ -259,12 +259,12 @@ env:
 
 # OpenCRVS core image tag:
 image:
-  tag: v1.9.11
+  tag: v1.9.12
 
 countryconfig:
   image:
     name: opencrvs/ocrvs-countryconfig
-    tag: v1.9.11
+    tag: v1.9.12
   port: 3040
 
 ##############################################################
