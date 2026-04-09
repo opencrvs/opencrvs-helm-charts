@@ -50,6 +50,8 @@ spec:
               value: {{ .Values.influxdb.port | quote }}
             - name: MINIO_HOST
               value: {{ .Values.minio.host | quote }}
+            - name: MINIO_PORT
+              value: {{ .Values.minio.port | quote }}
             - name: MONGO_HOST
               value: {{ .Values.mongodb.host }}
             - name: MONGO_PORT

@@ -32,7 +32,21 @@ spec:
               mountPath: /data-assets
       containers:
         - name: data-migration-analytics
-          command: ["bash", "-c", "/data-assets/setup-analytics.sh"]
+          command:
+            - bash
+            - -c
+            - |
+              scripts=(/data-assets/*.sh)
+
+              if [ ${#scripts[@]} -eq 0 ]; then
+                echo "No scripts found in /data-assets"
+                exit 0
+              fi
+
+              for script in "${scripts[@]}"; do
+                echo "Running ${script}"
+                "${script}"
+              done
           image: postgres:17
           env:
             - name: POSTGRES_HOST

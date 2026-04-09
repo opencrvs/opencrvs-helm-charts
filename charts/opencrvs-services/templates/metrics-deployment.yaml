@@ -12,6 +12,8 @@ spec:
       app: metrics
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: metrics
     spec:

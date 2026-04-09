@@ -42,6 +42,8 @@ spec:
       app: webhooks
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: webhooks
         service_name: opencrvs_webhooks

@@ -13,6 +13,8 @@ spec:
       app: user-mgnt
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: user-mgnt
         service_name: opencrvs_user-mgnt
@@ -39,6 +41,8 @@ spec:
               value: http://notification.{{ .Release.Namespace }}.svc.cluster.local:2020/
             - name: DOCUMENTS_URL
               value: http://documents.{{ .Release.Namespace }}.svc.cluster.local:9050
+            - name: EVENTS_URL
+              value: http://events.{{ .Release.Namespace }}.svc.cluster.local:5555/
           {{- if eq .Values.mongodb.auth_mode "disabled" }}
             - name: MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/user-mgnt

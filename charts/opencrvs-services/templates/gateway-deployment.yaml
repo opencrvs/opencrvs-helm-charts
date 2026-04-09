@@ -43,6 +43,8 @@ spec:
       app: gateway
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: gateway
         service.name: opencrvs_gateway
