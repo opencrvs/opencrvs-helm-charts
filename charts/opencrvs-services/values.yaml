@@ -247,6 +247,7 @@ hearth:
 # all OpenCRVS microservices (Kubernetes PODs):
 env:
   QA_ENV: true
+  MINIO_BUCKET: ocrvs
   NODE_ENV: production
   # LOG_LEVEL: debug
   # Application performance monitoring service URL.
