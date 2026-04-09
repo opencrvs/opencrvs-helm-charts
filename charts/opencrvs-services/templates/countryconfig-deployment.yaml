@@ -85,8 +85,6 @@ spec:
               value: /secrets/public-key.pem
             - name: COUNTRY_CONFIG_HOST
               value: "0.0.0.0"
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: CLIENT_APP_URL
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
             - name: LOGIN_URL
@@ -98,21 +96,12 @@ spec:
               value: {{ .Values.hostname | quote }}
             - name: GATEWAY_URL
               value: "http://gateway.{{ .Release.Namespace }}.svc.cluster.local:7070"
-            - name: APPLICATION_CONFIG_URL
-              value: "http://config.{{ .Release.Namespace }}.svc.cluster.local:2021"
             - name: AUTH_URL
               value: "http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040"
           {{- if eq .Values.mongodb.auth_mode "disabled" }}
-            - name: CONFIG_MONGO_URL
-              value: mongodb://{{ .Values.mongodb.host }}/application-config
             - name: MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/user-mgnt
           {{- else if or (eq .Values.mongodb.auth_mode "auto")  (eq .Values.mongodb.auth_mode "use_secret") }}
-            - name: CONFIG_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: CONFIG_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
             - name: MONGO_URL
               valueFrom:
                 secretKeyRef:
