@@ -109,7 +109,7 @@ mongodb:
     #        If not provided, then user is created with `readWrite` role on the database.
     #        If roles are provided, please add explicitly `readWrite` role for the database.
     #        For example:
-    #        [{ role: 'readWrite', db: 'hearth' }, ...]
+    #        [{ role: 'readWrite', db: 'user-mgnt' }, ...]
     - prefix: USER_MGNT
       db: user-mgnt
       user: user-mgnt
@@ -237,11 +237,6 @@ resources:
   cpuRequest: "100m"
   memoryLimit: "2Gi"
   cpuLimit: "2"
-
-hearth:
-  enabled: true
-  port: 3447
-
 
 # Global environment variables applied to
 # all OpenCRVS microservices (Kubernetes PODs):

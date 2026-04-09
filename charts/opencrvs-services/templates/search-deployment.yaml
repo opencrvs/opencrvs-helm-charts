@@ -27,8 +27,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: APPLICATION_CONFIG_URL
               value: http://config.{{ .Release.Namespace }}.svc.cluster.local:2021
             - name: CERT_PUBLIC_KEY_PATH
@@ -45,16 +43,6 @@ spec:
           {{- end }}
             - name: USER_MANAGEMENT_URL
               value: http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/
-          {{- if eq .Values.mongodb.auth_mode "disabled" }}
-            - name: HEARTH_MONGO_URL
-              value: mongodb://{{ .Values.mongodb.host }}/hearth-dev
-          {{- else if or (eq .Values.mongodb.auth_mode "auto")  (eq .Values.mongodb.auth_mode "use_secret") }}
-            - name: HEARTH_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: HEARTH_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
-          {{- end }}
           {{- include "render-env-vars" (dict "service_name" "search" "Values" .Values) }}
           {{- include "resources-helper" (dict "service_name" "search" "Values" .Values) | indent 10 }}
           {{- include "probes-helper" (dict "service_name" "search" "Values" .Values) | indent 10 }}
