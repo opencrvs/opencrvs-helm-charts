@@ -91,7 +91,6 @@ opensrvs_services = [
   'documents', 
   'events',
   'gateway',
-  'hearth',
   'login',
   'metrics',  
   'notification', 

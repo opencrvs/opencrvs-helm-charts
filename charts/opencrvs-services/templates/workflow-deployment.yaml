@@ -27,8 +27,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: CERT_PUBLIC_KEY_PATH
               value: /secrets/public-key.pem
             - name: COUNTRY
