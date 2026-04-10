@@ -10,7 +10,7 @@
 # Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
 
 echo "Running restore"
-DATABASES=${DATABASES:-"hearth-dev events user-mgnt metrics performance"}
+DATABASES=${DATABASES:-"hearth-dev events user-mgnt application-config metrics webhooks performance"}
 
 # Initial configuration
 RESTORE_DATE=${RESTORE_DATE:-$(date -d "yesterday" +%Y-%m-%d)}

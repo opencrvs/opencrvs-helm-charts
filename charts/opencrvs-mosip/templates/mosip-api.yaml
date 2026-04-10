@@ -78,6 +78,10 @@ spec:
               value: http://esignet-mock.{{ .Release.Namespace }}.svc.cluster.local:20260/oidc/userinfo
             - name: ESIGNET_TOKEN_URL
               value: http://esignet-mock.{{ .Release.Namespace }}.svc.cluster.local:20260/oauth/token
+            - name: MOSIP_BIRTH_WEBHOOK_URL
+              value: http://mosip-mock.{{ .Release.Namespace }}.svc.cluster.local:20240/webhooks/opencrvs/birth
+            - name: MOSIP_DEATH_WEBHOOK_URL
+              value: http://mosip-mock.{{ .Release.Namespace }}.svc.cluster.local:20240/webhooks/opencrvs/death
             - name: OPENCRVS_GATEWAY_URL
               value: http://gateway.{{ .Release.Namespace }}.svc.cluster.local:7070
             - name: OPENCRVS_PUBLIC_KEY_URL

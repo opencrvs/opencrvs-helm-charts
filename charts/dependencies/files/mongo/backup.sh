@@ -10,7 +10,7 @@
 # Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
 
 # Databases backup list
-DATABASES=${DATABASES:-"hearth-dev events user-mgnt metrics performance"}
+DATABASES=${DATABASES:-"hearth-dev events user-mgnt application-config metrics webhooks performance"}
 # Initial variables configuration
 # Today's date is used for filenames if LABEL is not provided
 BACKUP_DATE=$(date +%Y-%m-%d)
