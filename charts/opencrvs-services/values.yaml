@@ -364,10 +364,6 @@ notification:
   port: 2020
 
 
-search:
-  port: 9090
-
-
 user_mgnt:
   port: 3030
   env:
