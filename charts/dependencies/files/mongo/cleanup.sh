@@ -9,7 +9,7 @@
 #
 # Copyright (C) The OpenCRVS Authors located at https://github.com/opencrvs/opencrvs-core/blob/master/AUTHORS.
 
-DATABASES=${DATABASES:-"hearth-dev events user-mgnt application-config metrics webhooks performance"}
+DATABASES=${DATABASES:-"hearth-dev events user-mgnt metrics performance"}
 echo "Running cleanup"
 if [ ! -z ${MONGODB_ADMIN_USER+x} ] && [ ! -z ${MONGODB_ADMIN_PASSWORD+x} ]; then
   AUTH="--username $MONGODB_ADMIN_USER --password $MONGODB_ADMIN_PASSWORD --authenticationDatabase admin";
