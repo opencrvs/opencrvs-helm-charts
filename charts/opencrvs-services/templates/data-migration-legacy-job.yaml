@@ -7,10 +7,10 @@ metadata:
   # - https://opencrvsworkspace.slack.com/archives/C02LU432JGK/p1757940561135439
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-weight": "3"
   labels:
     app: migration
-  name: {{ .Values.data_migration.job_name | default "data-migration" }}
+  name: data-migration-legacy
 spec:
   template:
     metadata:
@@ -20,6 +20,7 @@ spec:
       containers:
         - name: migration
           image: "ghcr.io/opencrvs/ocrvs-migration:{{ .Values.image.tag }}"
+          command: ['/bin/sh', '-c', '/app/wait && yarn start:prod --migrate-legacy-data']
           env:
             - name: SUPER_USER_PASSWORD
               valueFrom:
@@ -69,11 +70,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: USER_MGNT_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
-            - name: PERFORMANCE_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: PERFORMANCE_MONGO_URL
                   name: {{ .Values.mongodb.urls_secret }}
             - name: HEARTH_MONGO_URL
               valueFrom:

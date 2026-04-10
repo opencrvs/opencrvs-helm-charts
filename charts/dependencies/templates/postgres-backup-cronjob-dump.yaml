@@ -31,7 +31,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: backup
-              image: postgres:17
+              image: {{ .Values.postgres.image }}
               env:
                 - name: POSTGRES_HOST
                   value: postgres-0.postgres.{{ .Release.Namespace }}.svc.cluster.local

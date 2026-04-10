@@ -67,7 +67,7 @@ spec:
     {{- end }}
       containers: 
         - name: postgres
-          image: postgres:17
+          image: {{ .Values.postgres.image }}
           command: ["/bin/bash", "-c"]
           args:
             - |
