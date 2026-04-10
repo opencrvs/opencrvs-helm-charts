@@ -197,7 +197,6 @@ Behind the scenes helm chart generates random username and password for each Ope
 
 - auth
 - gateway
-- webhooks
 
 Values are stored as a Kubernetes secret `redis-opencrvs-users` in dependencies namespace. Copy secret object as is into OpenCRVS application namespace to make it available:
 
