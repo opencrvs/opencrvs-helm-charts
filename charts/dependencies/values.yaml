@@ -49,6 +49,7 @@ mongodb:
 postgres:
   # Enable postgres deployment.
   enabled: true
+  image: chumaky/postgres_mongo_fdw:17.6_fdw5.5.2
   # By default postgres is deployed with authentication enabled user/password: postgres/postgres
   use_default_credentials: true
   # postgres databases and users to create, if `use_default_credentials` is set to `false`.
