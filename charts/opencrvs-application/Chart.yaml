@@ -1,5 +1,5 @@
 apiVersion: v2
-name: Generic Application
+name: opencrvs-application
 description: |
   Generic application helm chart template for OpenCRVS applications.
   This chart can be used as a starting point for creating new application
