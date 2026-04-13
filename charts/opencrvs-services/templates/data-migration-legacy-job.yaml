@@ -51,6 +51,22 @@ spec:
               value: {{ .Values.minio.host | quote }}
             - name: MINIO_PORT
               value: {{ .Values.minio.port | quote }}
+            - name: MONGO_HOST
+              value: {{ .Values.mongodb.host }}
+            - name: MONGO_PORT
+              value: "27017"
+          {{- if not (eq .Values.mongodb.auth_mode "disabled") }}
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mongodb.admin_user_secret_name }}
+                  key: MONGODB_ADMIN_USER
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mongodb.admin_user_secret_name }}
+                  key: MONGODB_ADMIN_PASSWORD
+          {{- end }}
           {{- if eq .Values.mongodb.auth_mode "disabled" }}
             - name: USER_MGNT_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/user-mgnt
