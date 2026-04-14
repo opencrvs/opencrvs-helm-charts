@@ -19,8 +19,6 @@ spec:
     - name: {{ .Values.app_name }}
       namespace: {{ .Release.Namespace }}
       port: {{ .Values.service.port }}
-    middlewares:
-      - name: sts-and-basic-response-headers
   {{- if .Values.ingress.tls_resolver }}
   tls:
     certResolver: {{ .Values.ingress.tls_resolver }}
