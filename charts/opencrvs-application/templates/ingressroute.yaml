@@ -3,7 +3,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ .Values.service_name }}
+  name: {{ .Values.app_name }}
 spec:
   entryPoints:
   {{- if .Values.ingress.ssl_enabled }}
@@ -16,9 +16,9 @@ spec:
   - match: 'Host(`{{ .Values.hostname }}`)'
     kind: Rule
     services:
-    - name: {{ .Values.service_name }}
+    - name: {{ .Values.app_name }}
       namespace: {{ .Release.Namespace }}
-      port: {{ .Values.port }}
+      port: {{ .Values.service.port }}
     middlewares:
       - name: sts-and-basic-response-headers
   {{- if .Values.ingress.tls_resolver }}

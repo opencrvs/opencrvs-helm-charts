@@ -2,28 +2,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.service_name }}
+  name: {{ .Values.app_name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.service_name }}
+      app: {{ .Values.app_name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.service_name }}
+        app: {{ .Values.app_name }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Values.service_name }}
+        - name: {{ .Values.app_name }}
           image: {{ .Values.image.name }}:{{ .Values.image.tag }}
           env:
           - name: ALLOWED_HOSTS
             value: {{ default .Values.hostname .Values.allowed_hosts }}
-          {{- include "render-env-vars" (dict "service_name" .Values.service_name "Values" .Values) }}
+          {{- include "render-env-vars" (dict "service_name" .Values.app_name "Values" .Values) }}
           ports:
             - containerPort: {{ .Values.service.container_port }}
               protocol: TCP

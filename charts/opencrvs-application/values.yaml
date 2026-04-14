@@ -1,4 +1,4 @@
-service_name: dummy-service
+app_name: dummy-service
 hostname: dummy-service.opencrvs.localhost
 
 service:
