@@ -2,6 +2,7 @@ hostname: opencrvs.localhost
 ingress:
   ssl_enabled: false
 mosip_mock:
+  enabled: true
   env:
     FOO: bar
     SENDER_EMAIL_ADDRESS: "test@opencrvs.org"
@@ -14,10 +15,12 @@ mosip_mock:
     MOSIP_WEBSUB_TOPIC: CREDENTIAL_ISSUED
 
 esignet_mock:
+  enabled: true
   env:
     OIDP_CLIENT_PRIVATE_KEY_PATH: /certs/esignet-jwk.txt
 
 mosip_api:
+  enabled: true
   env:
     LOCALE: en
     OIDP_CLIENT_PRIVATE_KEY_PATH: /certs/esignet-jwk.txt

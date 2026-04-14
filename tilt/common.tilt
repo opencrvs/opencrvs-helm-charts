@@ -93,11 +93,9 @@ opensrvs_services = [
   'gateway',
   'login',
   'metrics',  
-  'notification', 
-  'search', 
+  'notification',
   'user-mgnt', 
-  'webhooks', 
-  'workflow'
+  'webhooks',
 ]
 
 opensrvs_postdeploy_jobs = [
