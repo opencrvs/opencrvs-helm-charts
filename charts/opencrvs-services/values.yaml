@@ -388,7 +388,6 @@ events:
     startup:
       path: /health/ready
 
-scheduler: {}
 
 ##############################################################
 # One time jobs:
