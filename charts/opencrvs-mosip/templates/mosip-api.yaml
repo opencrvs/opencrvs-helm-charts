@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
         - name: mosip-api
-          image: ghcr.io/opencrvs/mosip-api:1.9.0-beta.7
+          image: ghcr.io/opencrvs/mosip-api:2.0.0-rc.3
           env:
             - name: CLIENT_APP_URL
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
