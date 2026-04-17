@@ -127,9 +127,6 @@ mongodb:
       db: openhim-dev
       user: openhim
       roles: "[{ role: 'readWrite', db: 'openhim' }, { role: 'readWrite', db: 'openhim-dev' }]"
-    - prefix: WEBHOOKS
-      db: webhooks
-      user: webhooks
     - prefix: NOTIFICATION
       db: notification
       user: notification
@@ -368,10 +365,6 @@ user_mgnt:
   port: 3030
   env:
     DEFAULT_USER_PASSWORD: "test"
-
-
-webhooks:
-  port: 2525
 
 
 events:

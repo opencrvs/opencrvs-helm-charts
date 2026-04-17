@@ -1,4 +1,3 @@
-
 hostname: opencrvs.localhost
 
 # Access to Dependencies like MinIO is done via Traefik IngressRoutes
@@ -12,13 +11,11 @@ ingress:
 # Kubernetes storage type, available options are `pvc` or `host_path`
 storage_type: pvc
 
-
 # timezone: You can specify a time zone for a CronJobs (backup/restore)
 # https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
 # For CronJobs with no time zone specified, the kube-controller-manager interprets schedules relative to its local time zone.
 # Example:
 # timezone: "Etc/UTC"
-
 
 # FIXME: Tiltfile deploys helm chart as template. There is no way to track existing secrets on the cluster.
 # This flag was introduced to avoid secrets update (mutation) on every file change within chart directory.
@@ -98,10 +95,10 @@ postgres:
       # For type=differential:
       #   - full:        weekly full
       #   - differential:daily
-      dump: "0 1 * * *"            # used only when type=dump
+      dump: "0 1 * * *" # used only when type=dump
 
-      full: "0 1 * * 0"                 # Sunday 01:00, used when type=differential
-      differential: "0 1 * * 1-6"       # Mon–Sat 01:00, used when type=differential
+      full: "0 1 * * 0" # Sunday 01:00, used when type=differential
+      differential: "0 1 * * 1-6" # Mon–Sat 01:00, used when type=differential
 
   restore:
     # Enable/Disable restore
@@ -179,7 +176,7 @@ logstash:
 
 elastalert:
   # Create configmap with custom rules for elastalert
-  # custom_rules_configmap: 
+  # custom_rules_configmap:
   env: {}
 
 minio:
@@ -252,7 +249,6 @@ redis:
   auth_users:
     - GATEWAY
     - AUTH
-    - WEBHOOKS
 
 influxdb:
   enabled: true

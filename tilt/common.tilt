@@ -31,8 +31,7 @@ traefik_deps = [
   'events',
   'gateway',
   'login',
-  'webhooks',
-  'minio',
+  'minio'
 ]
 k8s_resource("traefik", labels=[traefik_tilt_label])
 # Add labels to traefik resources
@@ -93,9 +92,8 @@ opensrvs_services = [
   'gateway',
   'login',
   'metrics',  
-  'notification',
-  'user-mgnt', 
-  'webhooks',
+  'notification', 
+  'user-mgnt'
 ]
 
 opensrvs_postdeploy_jobs = [

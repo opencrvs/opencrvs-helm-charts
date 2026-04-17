@@ -464,14 +464,12 @@ Default secret name: mongodb-admin-user
 
 **Keys:**
 
-- CONFIG_MONGO_URL
 - EVENTS_MONGO_URL
 - METRICS_MONGO_URL
 - NOTIFICATION_MONGO_URL
 - OPENHIM_MONGO_URL
 - PERFORMANCE_MONGO_URL
 - USER_MGNT_MONGO_URL
-- WEBHOOKS_MONGO_URL
 
 **Description:** Each key in this secrets represents connection string to MongoDB database as URL, user and database must exist. OpenCRVS will pickup correct credentials by key values and assign to appropriate microservice containers.
 
@@ -614,8 +612,6 @@ Users must be created by MinIO server administrator. OpenCRVS will pickup correc
 - DEFAULT_REDIS_PASSWORD
 - GATEWAY_REDIS_PASSWORD
 - GATEWAY_REDIS_USERNAME
-- WEBHOOKS_REDIS_PASSWORD
-- WEBHOOKS_REDIS_USERNAME
 
 **Description:** Redis credentials for OpenCRVS services.
 Users must be created by Redis server administrator. OpenCRVS will pickup correct credentials by key values and assign to appropriate microservice containers.
