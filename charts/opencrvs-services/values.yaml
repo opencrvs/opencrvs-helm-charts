@@ -136,6 +136,8 @@ mongodb:
       roles: "[{ role: 'readWrite', db: 'events' }, {role: 'read', db: 'user-mgnt'}]"
 
 postgres:
+  # Image used as postgres client to run init scripts, it should contain psql and postgres_fdw extension installed
+  image: chumaky/postgres_mongo_fdw:17.6_fdw5.5.2
   # Postgres hostname configuration
   host: postgres-0.postgres.opencrvs-deps-dev.svc.cluster.local
   port: 5432
