@@ -93,7 +93,6 @@ opensrvs_services = [
   'login',
   'metrics',  
   'notification', 
-  'scheduler',
   'user-mgnt'
 ]
 
