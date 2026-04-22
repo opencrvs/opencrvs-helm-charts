@@ -120,13 +120,6 @@ mongodb:
     - prefix: PERFORMANCE
       db: performance
       user: performance
-    - prefix: METRICS
-      db: metrics
-      user: metrics
-    - prefix: OPENHIM
-      db: openhim-dev
-      user: openhim
-      roles: "[{ role: 'readWrite', db: 'openhim' }, { role: 'readWrite', db: 'openhim-dev' }]"
     - prefix: NOTIFICATION
       db: notification
       user: notification
@@ -351,10 +344,6 @@ login:
     startup:
       httpGet:
         path: /health/ready
-
-metrics:
-  port: 1050
-
 
 notification:
   env:
