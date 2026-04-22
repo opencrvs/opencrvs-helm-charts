@@ -127,6 +127,9 @@ mongodb:
       db: openhim-dev
       user: openhim
       roles: "[{ role: 'readWrite', db: 'openhim' }, { role: 'readWrite', db: 'openhim-dev' }]"
+    - prefix: NOTIFICATION
+      db: notification
+      user: notification
     - prefix: EVENTS
       db: events
       user: events
@@ -351,6 +354,13 @@ login:
 
 metrics:
   port: 1050
+
+
+notification:
+  env:
+    COUNTRY: bgd
+  replicas: 1
+  port: 2020
 
 
 user_mgnt:
