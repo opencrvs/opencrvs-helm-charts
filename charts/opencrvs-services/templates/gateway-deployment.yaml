@@ -87,8 +87,6 @@ spec:
               value: "http://documents.{{ .Release.Namespace }}.svc.cluster.local:9050"
             - name: METRICS_URL
               value: "http://metrics.{{ .Release.Namespace }}.svc.cluster.local:1050"
-            - name: NOTIFICATION_URL
-              value: "http://notification.{{ .Release.Namespace }}.svc.cluster.local:2020/"
             - name: USER_MANAGEMENT_URL
               value: "http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/"
             - name: EVENTS_URL
