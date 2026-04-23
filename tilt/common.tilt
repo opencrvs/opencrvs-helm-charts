@@ -91,7 +91,6 @@ opensrvs_services = [
   'events',
   'gateway',
   'login',
-  'notification', 
   'user-mgnt'
 ]
 

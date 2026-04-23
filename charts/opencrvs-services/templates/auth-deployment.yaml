@@ -86,8 +86,6 @@ spec:
               value: '604800'
             - name: EVENTS_URL
               value: http://events.{{ .Release.Namespace }}.svc.cluster.local:5555/
-            - name: NOTIFICATION_SERVICE_URL
-              value: http://notification.{{ .Release.Namespace }}.svc.cluster.local:2020/
             - name: USER_MANAGEMENT_URL
               value: http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/
             - name: AUTH_PORT
