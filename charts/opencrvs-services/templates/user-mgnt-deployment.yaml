@@ -33,8 +33,6 @@ spec:
               value: /secrets/public-key.pem
             - name: HOST
               value: 0.0.0.0
-            - name: METRICS_URL
-              value: http://metrics.{{ .Release.Namespace }}.svc.cluster.local:1050
             - name: DOCUMENTS_URL
               value: http://documents.{{ .Release.Namespace }}.svc.cluster.local:9050
             - name: EVENTS_URL

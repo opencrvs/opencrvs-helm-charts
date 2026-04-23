@@ -3,7 +3,6 @@
 # We are good to go with defaults for now
 # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
 
-
 ###############################################################################
 # Dependencies configuration
 ###############################################################################
@@ -55,7 +54,7 @@ influxdb:
 minio:
   host: minio-0.minio.opencrvs-deps-dev.svc.cluster.local
   port: "3535"
-  # external_url: external <host/ip>[:port] available for client browser to issue signed document URL. 
+  # external_url: external <host/ip>[:port] available for client browser to issue signed document URL.
   #                   Default: minio.<opencrvs domain>
   # external_protocol: external protocol (http or https) available for client browser. (Default: helm chart http_scheme)
   # auth_mode:
@@ -120,13 +119,6 @@ mongodb:
     - prefix: PERFORMANCE
       db: performance
       user: performance
-    - prefix: METRICS
-      db: metrics
-      user: metrics
-    - prefix: OPENHIM
-      db: openhim-dev
-      user: openhim
-      roles: "[{ role: 'readWrite', db: 'openhim' }, { role: 'readWrite', db: 'openhim-dev' }]"
     - prefix: EVENTS
       db: events
       user: events
@@ -188,7 +180,6 @@ ingress:
 # See kubernetes documentation for more information on service types:
 # https://kubernetes.io/docs/concepts/services-networking/service/
 service_type: ClusterIP
-
 
 # timezone: You can specify a time zone for a CronJobs
 # https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
@@ -298,10 +289,8 @@ dashboards:
     memoryLimit: "2Gi"
     cpuLimit: "2"
 
-
 documents:
   port: 9050
-
 
 gateway:
   port: 7070
@@ -314,11 +303,10 @@ gateway:
     DISABLE_RATE_LIMIT: "true"
     LANGUAGES: "en,fr"
 
-
 login:
   port: 3020
   # login is an nginx docker image
-  # nginx_conf_d_configmaps: 
+  # nginx_conf_d_configmaps:
   #     List of Configmap names to store custom configuration:
   #     - each configmap must contain one configuration file
   #     - configuration file name must match with configmap name
@@ -349,15 +337,10 @@ login:
       httpGet:
         path: /health/ready
 
-metrics:
-  port: 1050
-
-
 user_mgnt:
   port: 3030
   env:
     DEFAULT_USER_PASSWORD: "test"
-
 
 events:
   port: 5555
@@ -373,19 +356,16 @@ events:
     startup:
       path: /health/ready
 
-
 ##############################################################
 # One time jobs:
 
 # data_migration: Job to migrate datastores while deployment
 data_migration: {}
 
-
 # data_cleanup: Wipe all persistent data from datastores including users
 # By running this job on production environment all data will be lost
 data_cleanup:
   enabled: false
-
 
 # data_seed: Initial data seeding into datastore, this job works only with clean environment
 # make sure your environment was cleaned up before running this job
