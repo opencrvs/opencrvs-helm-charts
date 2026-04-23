@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-custom-grants
+data:
+  custom-access.yaml: |
+{{ include "postgres.normalized.customAccess" . | indent 4 }}
+
+  custom-sql.yaml: |
+{{ include "postgres.normalized.customGrantSql" . | indent 4 }}
+
+  apply-custom-grants.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    export PGPASSWORD="${POSTGRES_ADMIN_PASSWORD}"
+
+    ADMIN_USER="${POSTGRES_ADMIN_USERNAME}"
+
+    apply_statement() {
+      local database="$1"
+      local sql="$2"
+
+      psql -v ON_ERROR_STOP=1 \
+           -U "${ADMIN_USER}" \
+           -d "${database}" \
+           -h "${POSTGRES_HOST}" \
+           -p "${POSTGRES_PORT}" <<SQL
+    ${sql}
+    SQL
+    }
+
+    echo "==> Applying structured customAccess grants"
+{{- range $entry := .Values.postgres.customAccess }}
+    echo "-- role={{ $entry.role }}, database={{ $entry.database }}, schema={{ $entry.schema }}"
+
+{{- if $entry.grants.schema }}
+    apply_statement "{{ $entry.database }}" "GRANT {{ join ", " $entry.grants.schema }} ON SCHEMA \"{{ $entry.schema }}\" TO \"{{ $entry.role }}\";"
+{{- end }}
+
+{{- range $tableName, $privs := (default (dict) $entry.tables) }}
+    apply_statement "{{ $entry.database }}" "GRANT {{ join ", " $privs }} ON TABLE \"{{ $entry.schema }}\".\"{{ $tableName }}\" TO \"{{ $entry.role }}\";"
+{{- end }}
+
+{{- range $viewName, $privs := (default (dict) $entry.views) }}
+    apply_statement "{{ $entry.database }}" "GRANT {{ join ", " $privs }} ON TABLE \"{{ $entry.schema }}\".\"{{ $viewName }}\" TO \"{{ $entry.role }}\";"
+{{- end }}
+
+{{- end }}
+
+    echo "==> Applying raw customGrantSql grants"
+{{- range $entry := .Values.postgres.customGrantSql }}
+    echo "-- role={{ $entry.role }}, database={{ $entry.database }}"
+    apply_statement "{{ $entry.database }}" '
+{{ $entry.sql | indent 6 }}
+    '
+{{- end }}
+
+    echo "Custom grants completed successfully"

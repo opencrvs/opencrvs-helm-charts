@@ -1,4 +1,14 @@
 {{/*
+Convert a name into an env-safe suffix.
+E/g: user-mgnt -> USER_MGNT
+     opencrvs.dev -> OPENCRVS_DEV
+*/}}
+{{- define "env-safe" -}}
+{{- . | upper | replace "-" "_" | replace "." "_" -}}
+{{- end -}}
+
+
+{{/*
 
 render-env-vars
 ---

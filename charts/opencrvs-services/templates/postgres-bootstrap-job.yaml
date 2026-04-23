@@ -1,0 +1,57 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-bootstrap
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "10"
+spec:
+  backoffLimit: {{ default 0 .Values.postgres.bootstrapJob.backoffLimit }}
+  template:
+    metadata:
+      name: postgres-bootstrap
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: postgres-bootstrap
+          image: {{ .Values.postgres.bootstrapJob.image | quote }}
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+            - /work/bootstrap.sh
+          env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.postgres.host }}
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.admin_user_secret_name }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.admin_user_secret_name }}
+                  key: POSTGRES_PASSWORD
+{{- range $roleName, $roleCfg := .Values.postgres.roles }}
+            - name: {{ include "env-safe" $roleName }}_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $roleCfg.secretName }}
+                  key: {{ default "username" $roleCfg.usernameKey }}
+            - name: {{ include "env-safe" $roleName }}_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $roleCfg.secretName }}
+                  key: {{ default "password" $roleCfg.passwordKey }}
+{{- end }}
+          volumeMounts:
+            - name: bootstrap
+              mountPath: /work
+      volumes:
+        - name: bootstrap
+          configMap:
+            name: postgres-bootstrap
+            defaultMode: 0755
