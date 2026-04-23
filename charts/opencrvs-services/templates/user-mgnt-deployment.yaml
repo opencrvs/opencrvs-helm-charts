@@ -19,9 +19,13 @@ spec:
         app: user-mgnt
         service_name: opencrvs_user-mgnt
     spec:
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: user-mgnt
-          image: "ghcr.io/opencrvs/ocrvs-user-mgnt:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.user_mgnt) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:

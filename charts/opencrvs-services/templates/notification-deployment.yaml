@@ -19,9 +19,13 @@ spec:
         app: notification
         service_name: opencrvs_notification
     spec:
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: notification
-          image: "ghcr.io/opencrvs/ocrvs-notification:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.notification) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:

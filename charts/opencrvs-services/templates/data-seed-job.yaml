@@ -16,9 +16,13 @@ spec:
       labels:
         app: data-seed
     spec:
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: data-seed
-          image: "ghcr.io/opencrvs/ocrvs-data-seeder:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.data_seed) }}
           env:
             - name: AUTH_HOST
               value: "http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040"

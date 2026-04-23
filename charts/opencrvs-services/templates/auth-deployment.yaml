@@ -56,8 +56,12 @@ spec:
         app: auth
         service_name: opencrvs_auth
     spec:
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-        - image: "ghcr.io/opencrvs/ocrvs-auth:{{ .Values.image.tag }}"
+        - image: {{ include "opencrvs.image" (dict "root" . "service" .Values.auth) }}
           name: auth
           env:
             - name: APN_NODE_NAME

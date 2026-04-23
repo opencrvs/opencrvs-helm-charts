@@ -47,13 +47,24 @@ spec:
       labels:
         app: dashboards
     spec:
+    {{- if .Values.platform.imagePullSecrets }}
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- else }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+    {{- end }}
       initContainers:
         - name: copy-assets
+          {{- if contains "/" .Values.countryconfig.image.name }}
           image: "{{ .Values.countryconfig.image.name }}:{{ .Values.countryconfig.image.tag }}-assets"
+          {{- else -}}
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.countryconfig) }}-assets
+          {{- end }}
           command:
             - sh
             - -c

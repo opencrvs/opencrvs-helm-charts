@@ -250,11 +250,6 @@ resources:
   memoryLimit: "2Gi"
   cpuLimit: "2"
 
-hearth:
-  enabled: true
-  port: 3447
-
-
 # Global environment variables applied to
 # all OpenCRVS microservices (Kubernetes PODs):
 env:
@@ -270,22 +265,47 @@ env:
   # SENTRY_DSN: https://...@o309867.ingest.sentry.io/....
 
 # OpenCRVS core image tag:
+# Deprecated: use platform.tag instead.
 image:
-  tag: v1.9.12
+  tag: v1.9.11
+# Deprecated: use platform.imagePullSecrets instead.
+imagePullSecrets: []
 
-countryconfig:
-  image:
-    name: opencrvs/ocrvs-countryconfig
-    tag: v1.9.12
-  port: 3040
+# Default image configuration for the OpenCRVS platform.
+# These values apply to all OpenCRVS services unless overridden
+# by a service-specific image configuration.
+platform:
+  # Default tag for all OpenCRVS images.
+  tag: v1.9.11
+
+  # Default registry for all OpenCRVS images.
+  registry: ghcr.io
+
+  # Default repository namespace for all OpenCRVS images,
+  # for example: opencrvs or myorg
+  repository: opencrvs
+
+  # Secrets used to pull images from private registries, if needed.
+  # Example:
+  # imagePullSecrets:
+  #   - name: registry-secret
+  imagePullSecrets: []
 
 ##############################################################
 # Per service configuration:
 auth:
   port: 4040
+  image:
+    name: ocrvs-auth
+    # optional overrides:
+    # registry: registry.example.com
+    # repository: custom-org
+    # tag: v2.0.0
 
 client:
   port: 3000
+  image:
+    name: ocrvs-client
   # client is an nginx docker image
   # nginx_conf_d_configmaps: see description for login.nginx_conf_d_configmaps section
   probes:
@@ -306,6 +326,15 @@ client:
 
 config:
   port: 2021
+  image:
+    name: ocrvs-config
+
+# Countryconfig service configuration, including the image tag and port number.
+countryconfig:
+  image:
+    name: opencrvs/ocrvs-countryconfig
+    tag: v1.9.11
+  port: 3040
 
 dashboards:
   enabled: false
@@ -327,10 +356,28 @@ dashboards:
 
 documents:
   port: 9050
+  image:
+    name: ocrvs-documents
 
+events:
+  port: 5555
+  image:
+    name: ocrvs-events
+  probes:
+    liveness:
+      path: /health/ready
+      timeoutSeconds: 10
+    readiness:
+      path: /health/ready
+      timeoutSeconds: 10
+    startup:
+      path: /health/ready
 
 gateway:
   port: 7070
+  image:
+    name: ocrvs-gateway
+
   env:
     CHECK_INVALID_TOKEN: "true"
     CONFIG_SMS_CODE_EXPIRY_SECONDS: "600"
@@ -339,9 +386,19 @@ gateway:
     DISABLE_RATE_LIMIT: "true"
     LANGUAGES: "en,fr"
 
+hearth:
+  enabled: true
+  port: 3447
+  image:
+    registry: docker.io
+    repository: opencrvs
+    name: hearth
+    tag: 1.1.0
 
 login:
   port: 3020
+  image:
+    name: ocrvs-login
   # login is an nginx docker image
   # nginx_conf_d_configmaps: 
   #     List of Configmap names to store custom configuration:
@@ -375,50 +432,50 @@ login:
 
 metrics:
   port: 1050
-
+  image:
+    name: ocrvs-metrics
 
 notification:
   env:
     COUNTRY: bgd
   replicas: 1
   port: 2020
+  image:
+    name: ocrvs-notification
 
+scheduler:
+  image:
+    name: ocrvs-scheduler
 
 search:
   port: 9090
+  image:
+    name: ocrvs-search
 
 
 user_mgnt:
   port: 3030
+  image:
+    name: ocrvs-user-mgnt
   
 
 webhooks:
   port: 2525
-
+  image:
+    name: ocrvs-webhooks
 
 workflow:
   port: 5050
-
-
-events:
-  port: 5555
-  probes:
-    liveness:
-      path: /health/ready
-      timeoutSeconds: 10
-    readiness:
-      path: /health/ready
-      timeoutSeconds: 10
-    startup:
-      path: /health/ready
-
-scheduler: {}
+  image:
+    name: ocrvs-workflow
 
 ##############################################################
 # One time jobs:
 
 # data_migration: Job to migrate datastores while deployment
-data_migration: {}
+data_migration:
+  image:
+    name: ocrvs-migration
 
 
 # data_cleanup: Wipe all persistent data from datastores including users

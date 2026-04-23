@@ -48,9 +48,13 @@ spec:
         app: webhooks
         service_name: opencrvs_webhooks
     spec:
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: webhooks
-          image: "ghcr.io/opencrvs/ocrvs-webhooks:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.webhooks) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:

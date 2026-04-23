@@ -15,9 +15,13 @@ spec:
       labels:
         app: scheduler
     spec:
+      {{- with .Values.platform.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: scheduler
-          image: "ghcr.io/opencrvs/ocrvs-scheduler:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.scheduler) }}
           env:
             - name: METRICS_URL
               value: http://metrics.{{ .Release.Namespace }}.svc.cluster.local:1050
