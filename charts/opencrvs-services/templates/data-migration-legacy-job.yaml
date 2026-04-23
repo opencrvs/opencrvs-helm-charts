@@ -78,7 +78,7 @@ spec:
             - name: DASHBOARD_MONGO_URL
               valueFrom:
                 secretKeyRef:
-                  key: METRICS_MONGO_URL
+                  key: PERFORMANCE_MONGO_URL
                   name: {{ .Values.mongodb.urls_secret }}
             - name: USER_MGNT_MONGO_URL
               valueFrom:
