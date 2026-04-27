@@ -253,7 +253,6 @@ redis:
     - WORKFLOW
     - AUTH
     - WEBHOOKS
-    - WORKFLOW
 
 influxdb:
   enabled: true
