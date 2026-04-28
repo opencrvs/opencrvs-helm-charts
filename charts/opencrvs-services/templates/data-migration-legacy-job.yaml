@@ -7,7 +7,7 @@ metadata:
   # - https://opencrvsworkspace.slack.com/archives/C02LU432JGK/p1757940561135439
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "3"
+    "helm.sh/hook-weight": "4"
   labels:
     app: migration
   name: data-migration-legacy
