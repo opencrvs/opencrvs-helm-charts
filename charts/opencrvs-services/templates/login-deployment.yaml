@@ -49,8 +49,13 @@ spec:
         - name: login
           image: "ghcr.io/opencrvs/ocrvs-login:{{ .Values.image.tag }}"
           env:
+          {{- if and
+            (not (hasKey (.Values.login.env | default dict) "CONTENT_SECURITY_POLICY_WILDCARD"))
+            (not (hasKey (.Values.env | default dict) "CONTENT_SECURITY_POLICY_WILDCARD"))
+          }}
             - name: CONTENT_SECURITY_POLICY_WILDCARD
               value: "*.{{ .Values.hostname }}"
+          {{- end }}
             - name: COUNTRY_CONFIG_URL_INTERNAL
               value: http://countryconfig.{{ .Release.Namespace }}.svc.cluster.local:3040
             - name: CLIENT_APP_URL
