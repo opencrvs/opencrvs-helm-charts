@@ -28,13 +28,13 @@ spec:
     - web
   {{- end }}
   routes:
-  - match: 'Host(`minio.{{ .Values.hostname }}`)'
+  - match: 'Host(`{{ include "render-external-subdomain" (dict "service_name" "minio" "Values" .Values) }}`)'
     kind: Rule
     services:
     - name: minio
       namespace: {{ .Release.Namespace }}
       port: 3535
-  - match: 'Host(`minio-console.{{ .Values.hostname }}`)'
+  - match: 'Host(`{{ include "render-external-subdomain" (dict "service_name" "minio-console" "Values" .Values) }}`)'
     kind: Rule
     services:
     - name: minio

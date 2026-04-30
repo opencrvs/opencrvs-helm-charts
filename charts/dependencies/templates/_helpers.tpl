@@ -50,7 +50,7 @@ Parameters:
 {{- define "render-external-url" -}}
 {{- $service_name := .service_name }}
 {{- $http_scheme := include "http-scheme" . }}
-{{- printf "%s://%s.%s" $http_scheme $service_name .Values.hostname }}
+{{- printf "%s://%s%s%s" $http_scheme $service_name ( .Values.subdomain_separator | default ".") .Values.hostname }}
 {{- end }}
 
 {{- define "resources-helper" -}}
