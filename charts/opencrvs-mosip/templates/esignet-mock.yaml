@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
         - name: esignet-mock
-          image: ghcr.io/opencrvs/esignet-mock:2.0.0-rc.3
+          image: {{ .Values.esignet_mock.image.repository }}:{{ .Values.esignet_mock.image.tag }}
           env:
             - name: CLIENT_APP_URL
               value: https://register.{{ .Values.hostname }}
