@@ -15,6 +15,8 @@ spec:
       labels:
         app: elasticsearch-reindex
     spec:
+      initContainers:
+      {{- include "elasticsearch-reindex.initContainerSpec" . | nindent 8 }}
       containers:
       {{- include "elasticsearch-reindex.containerSpec" . | nindent 8 }}
       restartPolicy: "OnFailure"
