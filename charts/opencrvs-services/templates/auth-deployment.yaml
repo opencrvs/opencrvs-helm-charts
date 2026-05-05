@@ -20,6 +20,14 @@ spec:
       port: {{ .Values.auth.port }}
     middlewares:
       - name: sts-and-basic-response-headers
+  - match: 'Host(`auth.{{ .Values.hostname }}`) && Path(`/internal/reindexing-token`)'
+    kind: Rule
+    services:
+    - name: auth
+      namespace: {{ .Release.Namespace }}
+      port: {{ .Values.auth.port }}
+    middlewares:
+      - name: block-internal-routes
   {{- if .Values.ingress.tls_resolver }}
   tls:
     certResolver: {{ .Values.ingress.tls_resolver }}
