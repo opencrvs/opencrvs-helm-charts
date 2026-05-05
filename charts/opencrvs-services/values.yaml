@@ -259,6 +259,7 @@ hearth:
 # all OpenCRVS microservices (Kubernetes PODs):
 env:
   QA_ENV: true
+  MINIO_BUCKET: ocrvs
   NODE_ENV: production
   # LOG_LEVEL: debug
   # Application performance monitoring service URL.
@@ -270,12 +271,12 @@ env:
 
 # OpenCRVS core image tag:
 image:
-  tag: v1.9.11
+  tag: v1.9.12
 
 countryconfig:
   image:
     name: opencrvs/ocrvs-countryconfig
-    tag: v1.9.11
+    tag: v1.9.12
   port: 3040
 
 ##############################################################
