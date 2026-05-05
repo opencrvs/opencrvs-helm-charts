@@ -6,7 +6,7 @@ service:
   port: 80
   container_port: 80
 
-allowed_hosts: ''
+allowed_hosts: '0.0.0.0'
 
 ingress:
   enabled: true

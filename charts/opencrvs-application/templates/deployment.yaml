@@ -21,8 +21,8 @@ spec:
         - name: {{ .Values.app_name }}
           image: {{ .Values.image.name }}:{{ .Values.image.tag }}
           env:
-          - name: ALLOWED_HOSTS
-            value: {{ default .Values.hostname .Values.allowed_hosts }}
+            - name: ALLOWED_HOSTS
+              value: {{ default .Values.hostname .Values.allowed_hosts }}
           {{- include "render-env-vars" (dict "service_name" .Values.app_name "Values" .Values) }}
           ports:
             - containerPort: {{ .Values.service.container_port }}
