@@ -166,7 +166,7 @@ hostname: opencrvs.localhost
 # - as set of subdomains to hostname, examples:
 #            - auth.opencrvs.localhost
 #            - register.opencrvs.localhost
-# - as set of variations to main domain, 
+# - as set of variations to main domain,
 #   in this variant wildcard certificate is needed only to one domain, examples:
 #            - auth-opencrvs.localhost
 #            - register-opencrvs.localhost
@@ -357,6 +357,7 @@ user_mgnt:
 events:
   port: 5555
   env:
+    DEFAULT_USER_PASSWORD: "test"
     TWO_FA_ENABLED: false
   probes:
     liveness:
