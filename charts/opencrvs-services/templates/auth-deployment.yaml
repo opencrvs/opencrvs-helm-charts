@@ -56,10 +56,7 @@ spec:
         app: auth
         service_name: opencrvs_auth
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.auth) | nindent 6 }}
       containers:
         - image: {{ include "opencrvs.image" (dict "root" . "service" .Values.auth) }}
           name: auth

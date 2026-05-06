@@ -15,10 +15,7 @@ spec:
       labels:
         app: hearth
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.hearth) | nindent 6 }}
       containers:
         - env:
             - name: authentication__type

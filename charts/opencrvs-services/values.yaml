@@ -267,7 +267,8 @@ env:
 # OpenCRVS core image tag:
 # Deprecated: use platform.tag instead.
 image:
-  tag: v1.9.11
+  tag: v1.9.12
+
 # Deprecated: use platform.imagePullSecrets instead.
 imagePullSecrets: []
 
@@ -276,14 +277,11 @@ imagePullSecrets: []
 # by a service-specific image configuration.
 platform:
   # Default tag for all OpenCRVS images.
-  tag: v1.9.11
+  tag: v1.9.12
 
-  # Default registry for all OpenCRVS images.
-  registry: ghcr.io
-
-  # Default repository namespace for all OpenCRVS images,
-  # for example: opencrvs or myorg
-  repository: opencrvs
+  # Default repository for all OpenCRVS images,
+  # for example: ghcr.io/opencrvs or myorg
+  repository: ghcr.io/opencrvs
 
   # Secrets used to pull images from private registries, if needed.
   # Example:
@@ -363,6 +361,8 @@ events:
   port: 5555
   image:
     name: ocrvs-events
+  env:
+    ES_INDEX_PREFIX: events
   probes:
     liveness:
       path: /health/ready

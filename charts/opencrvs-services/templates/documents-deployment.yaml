@@ -19,10 +19,7 @@ spec:
         app: documents
         service_name: opencrvs_documents
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.documents) | nindent 6 }}
       containers:
         - image: {{ include "opencrvs.image" (dict "root" . "service" .Values.documents) }}
           name: documents

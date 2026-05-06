@@ -73,24 +73,10 @@ spec:
         app: countryconfig
         service_name: opencrvs_countryconfig
     spec:
-    {{- if .Values.platform.imagePullSecrets }}
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- else }}
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.countryconfig) | nindent 6 }}
       containers:
         - name: countryconfig
-          {{- if contains "/" .Values.countryconfig.image.name }}
-          image: "{{ .Values.countryconfig.image.name }}:{{ .Values.countryconfig.image.tag }}"
-          {{- else -}}
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.countryconfig) | quote }}
-          {{- end }}
           env:
             - name: CERT_PUBLIC_KEY_PATH
               value: /secrets/public-key.pem

@@ -19,10 +19,7 @@ spec:
         app: user-mgnt
         service_name: opencrvs_user-mgnt
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.user_mgnt) | nindent 6 }}
       containers:
         - name: user-mgnt
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.user_mgnt) }}

@@ -34,30 +34,85 @@ Expected service values structure:
   image:
     name: <required>               # image name, e.g. ocrvs-auth
     tag: <optional>               # overrides platform.tag
-    registry: <optional>          # overrides platform.registry
     repository: <optional>        # overrides platform.repository
 
 Platform defaults:
 platform:
-  registry: ghcr.io
-  repository: opencrvs
+  repository: ghcr.io/opencrvs
   tag: v1.x.x
 
 Example output:
 ghcr.io/opencrvs/ocrvs-auth:v1.9.11
 
-Note:
-- repository = namespace/org (NOT full image path)
-- imagePullSecrets are handled at Pod spec level, not here
 */}}
 {{- define "opencrvs.image" -}}
 {{- $root := .root -}}
 {{- $svc := .service -}}
 
 {{- $tag := $svc.image.tag | default $root.Values.platform.tag | default $root.Values.image.tag -}}
-{{- $registry := $svc.image.registry | default $root.Values.platform.registry -}}
 {{- $repository := $svc.image.repository | default $root.Values.platform.repository -}}
 {{- $name := required "service image.name is required" $svc.image.name -}}
 
-{{- printf "%s/%s/%s:%s" $registry $repository $name $tag -}}
+{{- if contains "/" $name -}}
+{{- printf "%s:%s" $name $tag -}}
+{{- else -}}
+{{- printf "%s/%s:%s" $repository $name $tag -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+opencrvs.imagePullSecrets
+---
+Renders imagePullSecrets for a Pod spec.
+
+Usage:
+  {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.auth) | nindent 6 }}
+
+Resolution order:
+1. Service-specific imagePullSecrets:
+   <service>.image.imagePullSecrets
+
+2. Platform-level imagePullSecrets:
+   platform.imagePullSecrets
+
+3. Legacy imagePullSecrets:
+   imagePullSecrets
+
+Example values:
+
+platform:
+  imagePullSecrets:
+    - name: ghcr-secret
+
+auth:
+  image:
+    imagePullSecrets:
+      - name: custom-auth-secret
+
+Backward compatibility:
+- .Values.imagePullSecrets is deprecated.
+- It exists only to support older configuration files.
+- Remove this fallback after all environments migrate to platform.imagePullSecrets.
+
+Notes:
+- This helper renders the full imagePullSecrets block.
+- It should be used under spec.template.spec.
+- Do not add imagePullSecrets manually around this helper.
+*/}}
+{{- define "opencrvs.imagePullSecrets" -}}
+{{- $root := .root -}}
+{{- $svc := .service | default dict -}}
+{{- $svcImage := $svc.image | default dict -}}
+
+{{- $imagePullSecrets := (
+    $svcImage.imagePullSecrets
+    | default $root.Values.platform.imagePullSecrets
+    | default $root.Values.imagePullSecrets
+  ) -}}
+
+{{- with $imagePullSecrets }}
+imagePullSecrets:
+{{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end -}}

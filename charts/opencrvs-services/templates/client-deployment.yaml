@@ -49,10 +49,7 @@ spec:
         app: client
         service_name: opencrvs_client
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.client) | nindent 6 }}
       containers:
         - image: {{ include "opencrvs.image" (dict "root" . "service" .Values.client) }}
           name: client

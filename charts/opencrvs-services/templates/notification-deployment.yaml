@@ -19,10 +19,7 @@ spec:
         app: notification
         service_name: opencrvs_notification
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.notification) | nindent 6 }}
       containers:
         - name: notification
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.notification) }}

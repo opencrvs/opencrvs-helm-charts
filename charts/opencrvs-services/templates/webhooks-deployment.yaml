@@ -48,10 +48,7 @@ spec:
         app: webhooks
         service_name: opencrvs_webhooks
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.webhooks) | nindent 6 }}
       containers:
         - name: webhooks
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.webhooks) }}

@@ -318,14 +318,9 @@ helm upgrade --install opencrvs oci://ghcr.io/opencrvs/opencrvs-services \
         <td>Defines the default image tag for all OpenCRVS services.</td>
         </tr>
         <tr>
-        <td>platform.registry</td>
-        <td>ghcr.io</td>
-        <td>Defines the default container registry for all OpenCRVS service images.</td>
-        </tr>
-        <tr>
         <td>platform.repository</td>
         <td>opencrvs</td>
-        <td>Defines the default repository namespace used for OpenCRVS service images.</td>
+        <td>Defines the repository used for OpenCRVS service images. Can be overridden at service level.</td>
         </tr>
         <tr>
         <td>platform.imagePullSecrets</td>
@@ -358,14 +353,9 @@ helm upgrade --install opencrvs oci://ghcr.io/opencrvs/opencrvs-services \
         <td>Overrides the default image tag defined in <code>platform.tag</code>.</td>
         </tr>
         <tr>
-        <td>image.registry</td>
-        <td>platform.registry</td>
-        <td>Overrides the default container registry defined in <code>platform.registry</code>.</td>
-        </tr>
-        <tr>
         <td>image.repository</td>
         <td>platform.repository</td>
-        <td>Overrides the default repository namespace defined in <code>platform.repository</code>.</td>
+        <td>Overrides the default repository defined in <code>platform.repository</code>.</td>
         </tr>
         <tr>
             <td>hpa.enabled</td>

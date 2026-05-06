@@ -19,10 +19,7 @@ spec:
         app: workflow
         service_name: opencrvs_workflow
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.workflow) | nindent 6 }}
       containers:
         - name: workflow
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.workflow) }}

@@ -17,10 +17,7 @@ spec:
       labels:
         app: migration
     spec:
-      {{- with .Values.platform.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.data_migration) | nindent 6 }}
       containers:
         - name: migration
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.data_migration) }}
