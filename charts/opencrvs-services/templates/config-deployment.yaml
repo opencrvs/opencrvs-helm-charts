@@ -54,7 +54,7 @@ spec:
       {{- end }}
       containers:
         - name: config
-          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.client) }}
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.config) }}
           env:
             - name: CERT_PUBLIC_KEY_PATH
               value: /secrets/public-key.pem
