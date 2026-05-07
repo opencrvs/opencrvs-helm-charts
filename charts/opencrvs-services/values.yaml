@@ -430,8 +430,7 @@ events:
       timeoutSeconds: 10
     startup:
       path: /health/ready
-        path: /api/countryconfig/login-config.js
-
+      timeoutSeconds: 10
 user_mgnt:
   port: 3030
   image:
