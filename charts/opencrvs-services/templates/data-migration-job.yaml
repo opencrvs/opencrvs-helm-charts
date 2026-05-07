@@ -17,9 +17,10 @@ spec:
       labels:
         app: migration
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.data_migration) | nindent 6 }}
       containers:
         - name: migration
-          image: "ghcr.io/opencrvs/ocrvs-migration:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.data_migration) }}
           env:
             - name: SUPER_USER_PASSWORD
               valueFrom:

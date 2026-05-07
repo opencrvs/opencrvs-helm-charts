@@ -19,9 +19,10 @@ spec:
         app: search
         service_name: opencrvs_search
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.search) | nindent 6 }}
       containers:
         - name: search
-          image: "ghcr.io/opencrvs/ocrvs-search:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.search) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:

@@ -19,9 +19,10 @@ spec:
         app: workflow
         service_name: opencrvs_workflow
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.workflow) | nindent 6 }}
       containers:
         - name: workflow
-          image: "ghcr.io/opencrvs/ocrvs-workflow:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.workflow) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:

@@ -49,9 +49,10 @@ spec:
         app: gateway
         service.name: opencrvs_gateway
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.gateway) | nindent 6 }}
       containers:
         - name: gateway
-          image: "ghcr.io/opencrvs/ocrvs-gateway:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.gateway) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:

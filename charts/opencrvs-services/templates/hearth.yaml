@@ -15,6 +15,7 @@ spec:
       labels:
         app: hearth
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.hearth) | nindent 6 }}
       containers:
         - env:
             - name: authentication__type
@@ -38,7 +39,7 @@ spec:
           {{- if or .Values.hearth.secrets .Values.hearth.env .Values.env }}
           {{- include "render-env-vars" (dict "service_name" "hearth" "Values" .Values) }}
           {{- end }}
-          image: opencrvs/hearth:1.1.0
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.hearth) }}
           name: hearth
           ports:
             - containerPort: {{ .Values.hearth.port }}

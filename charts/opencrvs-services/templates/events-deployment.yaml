@@ -48,9 +48,10 @@ spec:
         app: events
         service_name: opencrvs_events
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.events) | nindent 6 }}
       containers:
         - name: events
-          image: "ghcr.io/opencrvs/ocrvs-events:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.events) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:
@@ -72,8 +73,6 @@ spec:
                   key: SEARCH_ELASTIC_URL
                   name: {{ .Values.elasticsearch.urls_secret }}
           {{- end }}
-            - name: ES_INDEX_PREFIX
-              value: "events"
             - name: USER_MANAGEMENT_URL
               value: "http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/"
             - name: CONFIG_URL
