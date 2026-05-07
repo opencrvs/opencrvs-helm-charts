@@ -312,7 +312,22 @@ helm upgrade --install opencrvs oci://ghcr.io/opencrvs/opencrvs-services \
             <td>See values.yaml</td>
             <td>Kubernetes http probes configuration, See defaults at <a href="values.yaml">values.yaml</a>. Each service may have own probes section. Make sure you are familiar with official documentation before changing this sections, see <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">Configure Liveness, Readiness and Startup Probes</a>. <b>NOTE: Only httpGet probes are supported.</b></td>
         </tr>
-       <tr>
+        <tr>
+        <td>platform.tag</td>
+        <td>v1.9.11</td>
+        <td>Defines the default image tag for all OpenCRVS services.</td>
+        </tr>
+        <tr>
+        <td>platform.repository</td>
+        <td>opencrvs</td>
+        <td>Defines the repository used for OpenCRVS service images. Can be overridden at service level.</td>
+        </tr>
+        <tr>
+        <td>platform.imagePullSecrets</td>
+        <td>[]</td>
+        <td>Defines the image pull secrets applied at Pod level for authenticating with private registries.</td>
+        </tr>
+        <tr>
             <th>Common Service properties</th>
             <th></th>
             <th>Properties listed below can be defined for any service</th>
@@ -326,6 +341,21 @@ helm upgrade --install opencrvs oci://ghcr.io/opencrvs/opencrvs-services \
             <td>secrets</td>
             <td>{}</td>
             <td>Mapping kubernetes secrets as environment variables. For more information see <a href="#mapping-secrets">Mapping secrets</a></td>
+        </tr>
+        <tr>
+        <td>image.name</td>
+        <td>-</td>
+        <td>Name of the container image (for example <code>ocrvs-auth</code>). Combined with registry and repository to form the full image reference.</td>
+        </tr>
+        <tr>
+        <td>image.tag</td>
+        <td>platform.tag</td>
+        <td>Overrides the default image tag defined in <code>platform.tag</code>.</td>
+        </tr>
+        <tr>
+        <td>image.repository</td>
+        <td>platform.repository</td>
+        <td>Overrides the default repository defined in <code>platform.repository</code>.</td>
         </tr>
         <tr>
             <td>hpa.enabled</td>

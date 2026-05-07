@@ -45,9 +45,10 @@ spec:
       labels:
         app: login
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.login) | nindent 6 }}
       containers:
         - name: login
-          image: "ghcr.io/opencrvs/ocrvs-login:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.login) }}
           env:
           {{- if and
             (not (hasKey (.Values.login.env | default dict) "CONTENT_SECURITY_POLICY_WILDCARD"))
