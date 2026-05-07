@@ -17,8 +17,9 @@ spec:
       labels:
         app: metrics
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.metrics) | nindent 6 }}
       containers:
-        - image: "ghcr.io/opencrvs/ocrvs-metrics:{{ .Values.image.tag }}"
+        - image: {{ include "opencrvs.image" (dict "root" . "service" .Values.metrics) }}
           name: metrics
           env:
             - name: APN_NODE_NAME

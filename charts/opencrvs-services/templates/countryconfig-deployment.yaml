@@ -73,13 +73,10 @@ spec:
         app: countryconfig
         service_name: opencrvs_countryconfig
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.countryconfig) | nindent 6 }}
       containers:
         - name: countryconfig
-          image: "{{ .Values.countryconfig.image.name }}:{{ .Values.countryconfig.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.countryconfig) | quote }}
           env:
             - name: CERT_PUBLIC_KEY_PATH
               value: /secrets/public-key.pem
