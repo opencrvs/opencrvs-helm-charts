@@ -49,7 +49,7 @@ ghcr.io/opencrvs/ocrvs-auth:v1.9.11
 {{- $root := .root -}}
 {{- $svc := .service -}}
 
-{{- $tag := $svc.image.tag | default $root.Values.platform.tag | default $root.Values.image.tag -}}
+{{- $tag := $svc.image.tag | default $root.Values.image.tag | default $root.Values.platform.tag -}}
 {{- $repository := $svc.image.repository | default $root.Values.platform.repository -}}
 {{- $name := required "service image.name is required" $svc.image.name -}}
 
