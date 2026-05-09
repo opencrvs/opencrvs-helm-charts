@@ -13,7 +13,7 @@ load('tilt/opencrvs.tilt', 'setup_opencrvs')
 # For example following images will run with no issues:
 # - core: v1.9.11
 # - opencrvs/ocrvs-countryconfig: v1.9.11
-core_images_tag = "v1.9.10"
+core_images_tag = "v1.9.13"
 
 # Countryconfig/Farajaland image repository and tag
 # Usually image repository value (countryconfig_image_name) is your repository on DockerHub
@@ -24,7 +24,7 @@ core_images_tag = "v1.9.10"
 
 # If you would like to start with sample countryconfig image, please use:
 countryconfig_image_name="opencrvs/ocrvs-countryconfig"
-countryconfig_image_tag="v1.9.10"
+countryconfig_image_tag="v1.9.13"
 
 # Namespaces:
 # - opencrvs-deps-dev, dependencies namespace
