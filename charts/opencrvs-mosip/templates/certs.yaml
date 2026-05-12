@@ -4,6 +4,8 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mosip-certs
+  annotations:
+    "helm.sh/resource-policy": keep
 type: Opaque
 data:
   esignet-jwk.txt: {{ .Files.Get "example-certs/esignet-jwk.txt" | b64enc | quote }}
