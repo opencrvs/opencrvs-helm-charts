@@ -63,7 +63,7 @@ jobs:
 
       # Full history is required so yarn can traverse the commit graph.
       - name: Checkout ${{ steps.get_base_branch.outputs.base_branch }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ steps.get_base_branch.outputs.base_branch }}
           fetch-depth: 0
@@ -91,10 +91,15 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git checkout -b "release/${{ inputs.version }}"
-
+          export VERSION="${{ inputs.version }}"
           # Bump helm chart version without creating a git tag.
           find charts/ -name Chart.yaml -exec yq -i ".version = \"$VERSION\"" {} \;
           find charts/ -name Chart.yaml -exec yq -i ".appVersion = \"$VERSION\"" {} \;
+          # Update Tiltfile image tags.
+          sed -i -E \
+          -e 's|^core_images_tag *= *".*"|core_images_tag = "'"$VERSION"'"|' \
+          -e 's|^countryconfig_image_tag *= *".*"|countryconfig_image_tag = "'"$VERSION"'"|' Tiltfile
+
           git add .
           git commit -m "chore: update version to ${{ inputs.version }}"
 
