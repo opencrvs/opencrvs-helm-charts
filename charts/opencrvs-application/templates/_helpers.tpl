@@ -9,24 +9,22 @@ Parameters:
 - .ServiceName: The name of the microservice, which is used to access service-specific values.
 - .Values: The top-level Values object for the Helm chart.
 */}}
-
 {{- define "render-env-vars" -}}
-  {{- $service_key_name := ( .service_name | replace "-" "_" ) }}
-
+  {{- $service_name := .service_name -}}
   {{/* Loop through and generate global environment variables */}}
   {{- range $k, $v := .Values.env }}
             - name: {{ $k }}
               value: {{ $v | quote }}
-  {{- end }}
+  {{- end -}}
   {{/* Access the service-specific values using the service name */}}
-  {{- with index .Values $service_key_name }}
+  {{- with index .Values $service_name -}}
     {{/* Loop through and generate service-specific environment variables */}}
     {{- range $k, $v := .env }}
             - name: {{ $k }}
               value: {{ $v | quote }}
-    {{- end }}
+    {{- end -}}
     {{/* Loop through and generate secret references for service-specific secrets */}}
-    {{- range $secret_name, $secret_values := .secrets }}
+    {{- range $secret_name, $secret_values := .secrets -}}
       {{- range $secret_value := $secret_values }}
         {{- $secret := split ":" $secret_value }}
             - name: {{ $secret._1 | default $secret._0 }}
@@ -50,20 +48,5 @@ Parameters:
 {{- define "render-external-url" -}}
 {{- $service_name := .service_name }}
 {{- $http_scheme := include "http-scheme" . }}
-{{- printf "%s://%s%s%s" $http_scheme $service_name ( .Values.subdomain_separator | default ".") .Values.hostname }}
-{{- end }}
-
-{{- define "resources-helper" -}}
-{{- $service_name := .service_name }}
-{{- $service_key_name := ( $service_name | replace "-" "_" ) }}
-{{- $global := .Values.resources }}
-{{- $service_values := index .Values $service_key_name | default dict }}
-{{- $service := $service_values.resources | default dict }}
-resources:
-  requests:
-    memory: {{ $service.memoryRequest | default $global.memoryRequest | quote }}
-    cpu: {{ $service.cpuRequest | default $global.cpuRequest | quote }}
-  limits:
-    memory: {{ $service.memoryLimit | default $global.memoryLimit | quote }}
-    cpu: {{ $service.cpuLimit | default $global.cpuLimit | quote }}
+{{- printf "%s://%s.%s" $http_scheme $service_name .Values.hostname }}
 {{- end }}

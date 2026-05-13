@@ -19,7 +19,7 @@ data:
     spec:
       containers:
       - name: restore-runner
-        image: postgres:17
+        image: {{ .Values.postgres.image }}
         command: ["/bin/sh", "-c"]
         args:
           - |

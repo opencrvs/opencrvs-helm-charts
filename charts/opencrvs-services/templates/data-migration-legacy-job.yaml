@@ -7,10 +7,10 @@ metadata:
   # - https://opencrvsworkspace.slack.com/archives/C02LU432JGK/p1757940561135439
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-weight": "4"
   labels:
     app: migration
-  name: {{ .Values.data_migration.job_name | default "data-migration" }}
+  name: data-migration-legacy
 spec:
   template:
     metadata:
@@ -21,6 +21,7 @@ spec:
       containers:
         - name: migration
           image: {{ include "opencrvs.image" (dict "root" . "service" .Values.data_migration) }}
+          command: ['/bin/sh', '-c', '/app/wait && yarn start:prod --migrate-legacy-data']
           env:
             - name: SUPER_USER_PASSWORD
               valueFrom:
@@ -70,14 +71,10 @@ spec:
           {{- if eq .Values.mongodb.auth_mode "disabled" }}
             - name: USER_MGNT_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/user-mgnt
-            - name: PERFORMANCE_MONGO_URL
-              value: mongodb://{{ .Values.mongodb.host }}/performance
             - name: HEARTH_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/hearth-dev
             - name: DASHBOARD_MONGO_URL
               value: mongodb://{{ .Values.mongodb.host }}/performance
-            - name: EVENTS_MONGO_URL
-              value: mongodb://{{ .Values.mongodb.host }}/events
           {{- else if or (eq .Values.mongodb.auth_mode "auto")  (eq .Values.mongodb.auth_mode "use_secret") }}
             - name: DASHBOARD_MONGO_URL
               valueFrom:
@@ -89,20 +86,10 @@ spec:
                 secretKeyRef:
                   key: USER_MGNT_MONGO_URL
                   name: {{ .Values.mongodb.urls_secret }}
-            - name: PERFORMANCE_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: PERFORMANCE_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
             - name: HEARTH_MONGO_URL
               valueFrom:
                 secretKeyRef:
                   key: HEARTH_MONGO_URL
-                  name: {{ .Values.mongodb.urls_secret }}
-            - name: EVENTS_MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  key: EVENTS_MONGO_URL
                   name: {{ .Values.mongodb.urls_secret }}
           {{- end }}
           {{- if or (eq .Values.postgres.auth_mode "auto") (eq .Values.postgres.auth_mode "disabled") }}
@@ -141,6 +128,6 @@ spec:
                   name: {{ .Values.minio.users_secret }}
           {{- end }}
             - name: WAIT_HOSTS
-              value: "{{ .Values.mongodb.host }}:27017,{{ .Values.influxdb.host }}:{{ .Values.influxdb.port }},{{ .Values.minio.host }}:{{ .Values.minio.port }},{{ .Values.elasticsearch.host }}:{{ .Values.elasticsearch.port }}"
+              value: "{{ .Values.postgres.host }}:{{ .Values.postgres.port }},{{ .Values.mongodb.host }}:27017,{{ .Values.influxdb.host }}:{{ .Values.influxdb.port }},{{ .Values.minio.host }}:{{ .Values.minio.port }},{{ .Values.elasticsearch.host }}:{{ .Values.elasticsearch.port }}"
           {{- include "render-env-vars" (dict "service_name" "data_migration" "Values" .Values) }}
       restartPolicy: "OnFailure"

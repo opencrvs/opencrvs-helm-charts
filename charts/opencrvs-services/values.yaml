@@ -3,7 +3,6 @@
 # We are good to go with defaults for now
 # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
 
-
 ###############################################################################
 # Dependencies configuration
 ###############################################################################
@@ -55,7 +54,7 @@ influxdb:
 minio:
   host: minio-0.minio.opencrvs-deps-dev.svc.cluster.local
   port: "3535"
-  # external_url: external <host/ip>[:port] available for client browser to issue signed document URL. 
+  # external_url: external <host/ip>[:port] available for client browser to issue signed document URL.
   #                   Default: minio.<opencrvs domain>
   # external_protocol: external protocol (http or https) available for client browser. (Default: helm chart http_scheme)
   # auth_mode:
@@ -109,7 +108,7 @@ mongodb:
     #        If not provided, then user is created with `readWrite` role on the database.
     #        If roles are provided, please add explicitly `readWrite` role for the database.
     #        For example:
-    #        [{ role: 'readWrite', db: 'hearth' }, ...]
+    #        [{ role: 'readWrite', db: 'user-mgnt' }, ...]
     - prefix: USER_MGNT
       db: user-mgnt
       user: user-mgnt
@@ -117,31 +116,17 @@ mongodb:
       db: hearth-dev
       user: hearth
       roles: "[{ role: 'readWrite', db: 'hearth' }, { role: 'readWrite', db: 'performance' }, { role: 'readWrite', db: 'hearth-dev' }]"
-    - prefix: CONFIG
-      db: application-config
-      user: config
     - prefix: PERFORMANCE
       db: performance
       user: performance
-    - prefix: METRICS
-      db: metrics
-      user: metrics
-    - prefix: OPENHIM
-      db: openhim-dev
-      user: openhim
-      roles: "[{ role: 'readWrite', db: 'openhim' }, { role: 'readWrite', db: 'openhim-dev' }]"
-    - prefix: WEBHOOKS
-      db: webhooks
-      user: webhooks
-    - prefix: NOTIFICATION
-      db: notification
-      user: notification
     - prefix: EVENTS
       db: events
       user: events
       roles: "[{ role: 'readWrite', db: 'events' }, {role: 'read', db: 'user-mgnt'}]"
 
 postgres:
+  # Image used as postgres client to run init scripts, it should contain psql and postgres_fdw extension installed
+  image: chumaky/postgres_mongo_fdw:17.6_fdw5.5.2
   # Postgres hostname configuration
   host: postgres-0.postgres.opencrvs-deps-dev.svc.cluster.local
   port: 5432
@@ -175,6 +160,18 @@ postgres:
 # All OpenCRVS services will be available under domain:
 hostname: opencrvs.localhost
 
+# subdomain_separator: separator between hostname and subdomains
+# generic form: <subdomain><subdomain_separator><hostname>
+# OpenCRVS can be deployed in different ways:
+# - as set of subdomains to hostname, examples:
+#            - auth.opencrvs.localhost
+#            - register.opencrvs.localhost
+# - as set of variations to main domain,
+#   in this variant wildcard certificate is needed only to one domain, examples:
+#            - auth-opencrvs.localhost
+#            - register-opencrvs.localhost
+subdomain_separator: "."
+
 # This section allows manually define credentials
 credentials: {}
   # super_user_password: Define super user password from stdin
@@ -195,7 +192,6 @@ ingress:
 # See kubernetes documentation for more information on service types:
 # https://kubernetes.io/docs/concepts/services-networking/service/
 service_type: ClusterIP
-
 
 # timezone: You can specify a time zone for a CronJobs
 # https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
@@ -238,15 +234,9 @@ resources:
   memoryLimit: "2Gi"
   cpuLimit: "2"
 
-hearth:
-  enabled: true
-  port: 3447
-
-
 # Global environment variables applied to
 # all OpenCRVS microservices (Kubernetes PODs):
 env:
-  QA_ENV: true
   NODE_ENV: production
   MINIO_BUCKET: ocrvs
   # LOG_LEVEL: debug
@@ -258,22 +248,47 @@ env:
   # SENTRY_DSN: https://...@o309867.ingest.sentry.io/....
 
 # OpenCRVS core image tag:
+# Deprecated: use platform.tag instead.
 image:
   tag: v1.9.12
 
-countryconfig:
-  image:
-    name: opencrvs/ocrvs-countryconfig
-    tag: v1.9.12
-  port: 3040
+# Deprecated: use platform.imagePullSecrets instead.
+imagePullSecrets: []
+
+# Default image configuration for the OpenCRVS platform.
+# These values apply to all OpenCRVS services unless overridden
+# by a service-specific image configuration.
+platform:
+  # Default tag for all OpenCRVS images.
+  tag: v1.9.12
+
+  # Default repository for all OpenCRVS images,
+  # for example: ghcr.io/opencrvs or myorg
+  repository: ghcr.io/opencrvs
+
+  # Secrets used to pull images from private registries, if needed.
+  # Example:
+  # imagePullSecrets:
+  #   - name: registry-secret
+  imagePullSecrets: []
 
 ##############################################################
 # Per service configuration:
 auth:
   port: 4040
+  env:
+    TWO_FA_ENABLED: false
+  image:
+    name: ocrvs-auth
+    # optional overrides:
+    # registry: registry.example.com
+    # repository: custom-org
+    # tag: v2.0.0
 
 client:
   port: 3000
+  image:
+    name: ocrvs-client
   # client is an nginx docker image
   # nginx_conf_d_configmaps: see description for login.nginx_conf_d_configmaps section
 
@@ -294,6 +309,15 @@ client:
 
 config:
   port: 2021
+  image:
+    name: ocrvs-config
+
+# Countryconfig service configuration, including the image tag and port number.
+countryconfig:
+  image:
+    name: opencrvs/ocrvs-countryconfig
+    tag: v1.9.11
+  port: 3040
 
 dashboards:
   enabled: false
@@ -312,14 +336,34 @@ dashboards:
     memoryLimit: "2Gi"
     cpuLimit: "2"
 
-
 documents:
   port: 9050
+  image:
+    name: ocrvs-documents
 
+events:
+  port: 5555
+  image:
+    name: ocrvs-events
+  env:
+    ES_INDEX_PREFIX: events
+  probes:
+    liveness:
+      path: /health/ready
+      timeoutSeconds: 10
+    readiness:
+      path: /health/ready
+      timeoutSeconds: 10
+    startup:
+      path: /health/ready
 
 gateway:
   port: 7070
+  image:
+    name: ocrvs-gateway
+
   env:
+    TWO_FA_ENABLED: false
     CHECK_INVALID_TOKEN: "true"
     CONFIG_SMS_CODE_EXPIRY_SECONDS: "600"
     CONFIG_TOKEN_EXPIRY_SECONDS: "604800"
@@ -327,11 +371,12 @@ gateway:
     DISABLE_RATE_LIMIT: "true"
     LANGUAGES: "en,fr"
 
-
 login:
   port: 3020
+  image:
+    name: ocrvs-login
   # login is an nginx docker image
-  # nginx_conf_d_configmaps: 
+  # nginx_conf_d_configmaps:
   #     List of Configmap names to store custom configuration:
   #     - each configmap must contain one configuration file
   #     - configuration file name must match with configmap name
@@ -362,35 +407,20 @@ login:
       httpGet:
         path: /health/ready
 
-metrics:
-  port: 1050
-
-
-notification:
-  env:
-    COUNTRY: bgd
-  replicas: 1
-  port: 2020
-
-
-search:
-  port: 9090
-
-
 user_mgnt:
   port: 3030
-  
-
-webhooks:
-  port: 2525
-
-
-workflow:
-  port: 5050
-
+  env:
+    DEFAULT_USER_PASSWORD: "test"
+  image:
+    name: ocrvs-user-mgnt
 
 events:
   port: 5555
+  image:
+    name: ocrvs-events
+  env:
+    DEFAULT_USER_PASSWORD: "test"
+    TWO_FA_ENABLED: false
   probes:
     liveness:
       path: /health/ready
@@ -400,26 +430,32 @@ events:
       timeoutSeconds: 10
     startup:
       path: /health/ready
+      timeoutSeconds: 10
+user_mgnt:
+  port: 3030
+  image:
+    name: ocrvs-user-mgnt
 
-scheduler: {}
 
 ##############################################################
 # One time jobs:
 
 # data_migration: Job to migrate datastores while deployment
-data_migration: {}
-
+data_migration:
+  image:
+    name: ocrvs-migration
 
 # data_cleanup: Wipe all persistent data from datastores including users
 # By running this job on production environment all data will be lost
 data_cleanup:
   enabled: false
 
-
 # data_seed: Initial data seeding into datastore, this job works only with clean environment
 # make sure your environment was cleaned up before running this job
 data_seed:
   enabled: true
+  image:
+    name: ocrvs-data-seeder
   env:
     # When users are seeded, are they immediately active using a test password and
     # six zeros as a 2-Factor auth code. Always set to false in production and staging.

@@ -13,7 +13,7 @@ spec:
     - web
   {{- end }}
   routes:
-  - match: 'Host(`metabase.{{ .Values.hostname }}`)'
+  - match: 'Host(`{{ include "render-external-subdomain" (dict "service_name" "metabase" "Values" .Values) }}`)'
     kind: Rule
     services:
     - name: dashboards
@@ -47,13 +47,10 @@ spec:
       labels:
         app: dashboards
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.countryconfig) | nindent 6 }}
       initContainers:
         - name: copy-assets
-          image: "{{ .Values.countryconfig.image.name }}:{{ .Values.countryconfig.image.tag }}-assets"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.countryconfig) }}-assets
           command:
             - sh
             - -c

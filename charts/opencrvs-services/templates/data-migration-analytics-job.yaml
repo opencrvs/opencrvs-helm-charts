@@ -14,13 +14,10 @@ spec:
       labels:
         app: data-migration-analytics
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.countryconfig) | nindent 6 }}
       initContainers:
         - name: copy-assets
-          image: "{{ .Values.countryconfig.image.name }}:{{ .Values.countryconfig.image.tag }}-assets"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.countryconfig) }}-assets
           command:
             - sh
             - -c
@@ -47,7 +44,7 @@ spec:
                 echo "Running ${script}"
                 "${script}"
               done
-          image: postgres:17
+          image: {{ .Values.postgres.image }}
           env:
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.host }}

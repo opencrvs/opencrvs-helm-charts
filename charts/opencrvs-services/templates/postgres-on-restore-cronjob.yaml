@@ -22,6 +22,8 @@ spec:
             job-type: restore
         spec:
           restartPolicy: OnFailure
+          initContainers:
+          {{- include "elasticsearch-reindex.initContainerSpec" . | nindent 12 }}
           containers:
             {{- include "postgres-on-deploy.containerSpec" . | nindent 12 }}
             {{- include "elasticsearch-reindex.containerSpec" . | nindent 12 }}

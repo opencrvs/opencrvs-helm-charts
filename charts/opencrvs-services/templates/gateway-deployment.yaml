@@ -12,7 +12,7 @@ spec:
     - web
   {{- end }}
   routes:
-  - match: 'Host(`gateway.{{ .Values.hostname }}`)'
+  - match: 'Host(`{{ include "render-external-subdomain" (dict "service_name" "gateway" "Values" .Values) }}`)'
     kind: Rule
     services:
     - name: gateway
@@ -49,9 +49,10 @@ spec:
         app: gateway
         service.name: opencrvs_gateway
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.gateway) | nindent 6 }}
       containers:
         - name: gateway
-          image: "ghcr.io/opencrvs/ocrvs-gateway:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.gateway) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:
@@ -61,12 +62,8 @@ spec:
               value: /secrets/public-key.pem
             - name: DOMAIN
               value: "*"
-            # TODO:
-            # value: {{ .Values.hostname | quote }}
             - name: HOST
               value: "0.0.0.0"
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
             - name: REDIS_HOST
               value: {{ .Values.redis.host | quote }}
           {{- if eq .Values.redis.auth_mode "use_secret" }}
@@ -85,24 +82,12 @@ spec:
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
             - name: LOGIN_URL
               value: {{ include "render-external-url" (dict "service_name" "login" "Values" .Values) }}
-            - name: APPLICATION_CONFIG_URL
-              value: "http://config.{{ .Release.Namespace }}.svc.cluster.local:2021"
             - name: AUTH_URL
               value: http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040
             - name: DOCUMENTS_URL
               value: "http://documents.{{ .Release.Namespace }}.svc.cluster.local:9050"
-            - name: METRICS_URL
-              value: "http://metrics.{{ .Release.Namespace }}.svc.cluster.local:1050"
-            - name: NOTIFICATION_URL
-              value: "http://notification.{{ .Release.Namespace }}.svc.cluster.local:2020/"
-            - name: SEARCH_URL
-              value: "http://search.{{ .Release.Namespace }}.svc.cluster.local:9090/"
             - name: USER_MANAGEMENT_URL
               value: "http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/"
-            - name: WEBHOOKS_URL
-              value: "http://webhooks.{{ .Release.Namespace }}.svc.cluster.local:2525/"
-            - name: WORKFLOW_URL
-              value: "http://workflow.{{ .Release.Namespace }}.svc.cluster.local:5050/"
             - name: EVENTS_URL
               value: "http://events.{{ .Release.Namespace }}.svc.cluster.local:5555/"
             - name: COUNTRY_CONFIG_URL

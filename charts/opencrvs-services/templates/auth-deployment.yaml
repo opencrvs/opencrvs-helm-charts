@@ -12,7 +12,7 @@ spec:
     - web
   {{- end }}
   routes:
-  - match: 'Host(`auth.{{ .Values.hostname }}`)'
+  - match: 'Host(`{{ include "render-external-subdomain" (dict "service_name" "auth" "Values" .Values) }}`)'
     kind: Rule
     services:
     - name: auth
@@ -48,8 +48,9 @@ spec:
         app: auth
         service_name: opencrvs_auth
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.auth) | nindent 6 }}
       containers:
-        - image: "ghcr.io/opencrvs/ocrvs-auth:{{ .Values.image.tag }}"
+        - image: {{ include "opencrvs.image" (dict "root" . "service" .Values.auth) }}
           name: auth
           env:
             - name: APN_NODE_NAME
@@ -86,8 +87,6 @@ spec:
               value: '604800'
             - name: EVENTS_URL
               value: http://events.{{ .Release.Namespace }}.svc.cluster.local:5555/
-            - name: NOTIFICATION_SERVICE_URL
-              value: http://notification.{{ .Release.Namespace }}.svc.cluster.local:2020/
             - name: USER_MANAGEMENT_URL
               value: http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:3030/
             - name: AUTH_PORT

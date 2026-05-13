@@ -12,7 +12,7 @@ spec:
     - web
   {{- end }}
   routes:
-  - match: 'Host(`login.{{ .Values.hostname }}`) || Host(`{{ .Values.hostname }}`)'
+  - match: 'Host(`{{ include "render-external-subdomain" (dict "service_name" "login" "Values" .Values) }}`) || Host(`{{ .Values.hostname }}`)'
     kind: Rule
     services:
     - name: login
@@ -45,20 +45,24 @@ spec:
       labels:
         app: login
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.login) | nindent 6 }}
       containers:
         - name: login
-          image: "ghcr.io/opencrvs/ocrvs-login:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.login) }}
           env:
+          {{- if and
+            (not (hasKey (.Values.login.env | default dict) "CONTENT_SECURITY_POLICY_WILDCARD"))
+            (not (hasKey (.Values.env | default dict) "CONTENT_SECURITY_POLICY_WILDCARD"))
+          }}
             - name: CONTENT_SECURITY_POLICY_WILDCARD
               value: "*.{{ .Values.hostname }}"
+          {{- end }}
             - name: COUNTRY_CONFIG_URL_INTERNAL
               value: http://countryconfig.{{ .Release.Namespace }}.svc.cluster.local:3040
             - name: CLIENT_APP_URL
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
             - name: AUTH_URL_INTERNAL
               value: http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040
-            - name: CONFIG_API_URL_INTERNAL
-              value: http://config.{{ .Release.Namespace }}.svc.cluster.local:2021
             - name: GATEWAY_URL_INTERNAL
               value: http://gateway.{{ .Release.Namespace }}.svc.cluster.local:7070
           {{- include "render-env-vars" (dict "service_name" "login" "Values" .Values) }}

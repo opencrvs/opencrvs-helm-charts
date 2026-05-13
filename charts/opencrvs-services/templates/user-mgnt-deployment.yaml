@@ -19,28 +19,21 @@ spec:
         app: user-mgnt
         service_name: opencrvs_user-mgnt
     spec:
+      {{- include "opencrvs.imagePullSecrets" (dict "root" . "service" .Values.user_mgnt) | nindent 6 }}
       containers:
         - name: user-mgnt
-          image: "ghcr.io/opencrvs/ocrvs-user-mgnt:{{ .Values.image.tag }}"
+          image: {{ include "opencrvs.image" (dict "root" . "service" .Values.user_mgnt) }}
           env:
             - name: APN_NODE_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: FHIR_URL
-              value: http://hearth.{{ .Release.Namespace }}.svc.cluster.local:3447/fhir
-            - name: APPLICATION_CONFIG_URL
-              value: http://config.{{ .Release.Namespace }}.svc.cluster.local:2021
             - name: COUNTRY_CONFIG_URL
               value: http://countryconfig.{{ .Release.Namespace }}.svc.cluster.local:3040
             - name: CERT_PUBLIC_KEY_PATH
               value: /secrets/public-key.pem
             - name: HOST
               value: 0.0.0.0
-            - name: METRICS_URL
-              value: http://metrics.{{ .Release.Namespace }}.svc.cluster.local:1050
-            - name: NOTIFICATION_SERVICE_URL
-              value: http://notification.{{ .Release.Namespace }}.svc.cluster.local:2020/
             - name: DOCUMENTS_URL
               value: http://documents.{{ .Release.Namespace }}.svc.cluster.local:9050
             - name: EVENTS_URL
