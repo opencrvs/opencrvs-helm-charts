@@ -196,7 +196,7 @@ elastalert:
 minio:
   # Enable or disable MinIO deployment.
   enabled: true
-
+  image: quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
   # Use default credentials (username: minioadmin, password: minioadmin).
   # Highly discouraged for production environments—see official docs:
   # https://min.io/docs/minio/linux/administration/identity-access-management/minio-user-management.html
