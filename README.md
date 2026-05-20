@@ -1,7 +1,7 @@
 # General information
 
 > [!IMPORTANT]
-> This repository contains Helm charts and development tools for OpenCRVS. For comprehensive documentation, installation guides, and infrastructure setup instructions, please refer to the **[Official OpenCRVS Documentation](https://documentation.opencrvs.org/)**.
+> **This repository is deprecated, all changes were merged into https://github.com/opencrvs/opencrvs-core**.
 
 
 ## 🚀 Getting Started
