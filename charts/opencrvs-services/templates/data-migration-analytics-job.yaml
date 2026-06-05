@@ -44,7 +44,7 @@ spec:
                 echo "Running ${script}"
                 "${script}"
               done
-          image: {{ .Values.postgres.image }}
+          image: postgres:17
           env:
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.host }}
