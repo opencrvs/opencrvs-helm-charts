@@ -88,6 +88,8 @@ spec:
               value: {{ include "render-external-url" (dict "service_name" "register" "Values" .Values) }}
             - name: LOGIN_URL
               value: {{ include "render-external-url" (dict "service_name" "login" "Values" .Values) }}
+            - name: USER_MGMT_URL
+              value: "http://user-mgnt.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.user_mgnt.port }}"
             # TODO: Check if this value is needed here?
             - name: COUNTRY_CONFIG_URL
               value: {{ include "render-external-url" (dict "service_name" "countryconfig" "Values" .Values) }}
