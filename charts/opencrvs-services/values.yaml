@@ -335,16 +335,6 @@ countryconfig:
     name: opencrvs/ocrvs-countryconfig
     tag: v1.9.15
   port: 3040
-  # MOSIP direct-authentication (ocrvs-12360): seed the MOSIP integration's
-  # OpenCRVS system client credentials on startup. Both values MUST match the
-  # OPENCRVS_CLIENT_ID / OPENCRVS_CLIENT_SECRET given to mosip-api (opencrvs-mosip
-  # chart) — reference the same shared k8s Secret so they stay in sync. Leave
-  # unset to have user-mgnt generate credentials instead (an NSA reveals them via
-  # the Integrations page).
-  # secrets:
-  #   mosip-opencrvs-client:
-  #     - client-id:MOSIP_INTEGRATION_CLIENT_ID
-  #     - client-secret:MOSIP_INTEGRATION_CLIENT_SECRET
 
 dashboards:
   enabled: false

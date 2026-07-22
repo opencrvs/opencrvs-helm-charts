@@ -27,16 +27,6 @@ mosip_api:
   image:
     repository: ghcr.io/opencrvs/mosip-api
     tag: 1.9.2-mock.2
-  # MOSIP direct-authentication (ocrvs-12360): the integration's own OpenCRVS
-  # system client credentials. Both values MUST match the
-  # MOSIP_INTEGRATION_CLIENT_ID / MOSIP_INTEGRATION_CLIENT_SECRET seeded by
-  # countryconfig (opencrvs-services chart) — reference the same shared k8s
-  # Secret so they stay in sync. Leave unset to fall back to the token stored at
-  # registration time.
-  # secrets:
-  #   mosip-opencrvs-client:
-  #     - client-id:OPENCRVS_CLIENT_ID
-  #     - client-secret:OPENCRVS_CLIENT_SECRET
   env:
     LOCALE: en
     OIDP_CLIENT_PRIVATE_KEY_PATH: /certs/esignet-jwk.txt
