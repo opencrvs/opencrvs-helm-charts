@@ -277,7 +277,7 @@ imagePullSecrets: []
 # by a service-specific image configuration.
 platform:
   # Default tag for all OpenCRVS images.
-  tag: v1.9.12
+  tag: v1.9.15
 
   # Default repository for all OpenCRVS images,
   # for example: ghcr.io/opencrvs or myorg
@@ -326,12 +326,14 @@ config:
   port: 2021
   image:
     name: ocrvs-config
+  env:
+    CHECK_INVALID_TOKEN: "true"
 
 # Countryconfig service configuration, including the image tag and port number.
 countryconfig:
   image:
     name: opencrvs/ocrvs-countryconfig
-    tag: v1.9.11
+    tag: v1.9.15
   port: 3040
 
 dashboards:

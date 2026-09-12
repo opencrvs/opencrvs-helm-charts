@@ -85,6 +85,11 @@ spec:
               value: http://gateway.{{ .Release.Namespace }}.svc.cluster.local:7070
             - name: OPENCRVS_PUBLIC_KEY_URL
               value: http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040/.well-known
+            # Used to mint fresh confirmation tokens from the integration's own
+            # credentials (OPENCRVS_CLIENT_ID/OPENCRVS_CLIENT_SECRET, set via
+            # values). Falls back to the stored token when those are unset.
+            - name: OPENCRVS_AUTH_URL
+              value: http://auth.{{ .Release.Namespace }}.svc.cluster.local:4040
           {{- include "render-env-vars" (dict "service_name" "mosip_api" "Values" .Values) }}
           volumeMounts:
             - name: keystore
