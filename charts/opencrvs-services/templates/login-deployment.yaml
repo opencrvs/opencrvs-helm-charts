@@ -42,6 +42,8 @@ spec:
       app: login
   template:
     metadata:
+      annotations:
+        lastdeploy-timestamp: {{ now | quote }}
       labels:
         app: login
     spec:
